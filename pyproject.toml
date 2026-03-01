@@ -1,5 +1,5 @@
 [project]
-name = "pipeline-pk"
+name = "pipeline_labs"
 version = "0.0.3"
 description = "The official Python library for the pipeline API"
 dynamic = ["readme"]
