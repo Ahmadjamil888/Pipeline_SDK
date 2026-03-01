@@ -1,7 +1,7 @@
 # Pipeline Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/pipeline_labs.svg?label=pypi%20(stable))](https://pypi.org/project/pipeline_labs/)
+[![PyPI version](https://img.shields.io/pypi/v/pipeline-pk.svg?label=pypi%20(stable))](https://pypi.org/project/pipeline-pk/)
 
 The Pipeline Python library provides convenient access to the Pipeline REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
@@ -17,7 +17,7 @@ The full API of this library can be found in [api.md](api.md).
 
 ```sh
 # install from PyPI
-pip install pipeline_labs
+pip install pipeline-pk
 ```
 
 ## Usage
@@ -67,7 +67,7 @@ You can enable this by installing `aiohttp`:
 
 ```sh
 # install from PyPI
-pip install pipeline_labs[aiohttp]
+pip install pipeline-pk[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
