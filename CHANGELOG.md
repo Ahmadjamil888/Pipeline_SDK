@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.3 (2026-03-01)
+
+Full Changelog: [v0.0.2...v0.0.3](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.2...v0.0.3)
+
+### Chores
+
+* update SDK settings ([da651de](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/da651de5c11e62312a8e02767dc2e692226503e3))
+* update SDK settings ([aa0281a](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/aa0281a49219e5dca8662788b2717d86b7795ba5))
+
 ## 0.0.2 (2026-02-28)
 
 Full Changelog: [v0.0.1...v0.0.2](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.1...v0.0.2)
