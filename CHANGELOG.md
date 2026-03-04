@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.5 (2026-03-04)
+
+Full Changelog: [v0.0.4...v0.0.5](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.4...v0.0.5)
+
+### Chores
+
+* **internal:** refactor authentication internals ([d639e6c](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/d639e6cd7114f7382de8e49ba7ccc3a05c16b020))
+
 ## 0.0.4 (2026-03-01)
 
 Full Changelog: [v0.0.3...v0.0.4](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.3...v0.0.4)
