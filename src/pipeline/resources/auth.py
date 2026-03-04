@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from .._types import Body, Query, Headers, NotGiven, omit, not_given
+from .._types import Body, Query, Headers, NotGiven, not_given
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -50,11 +50,14 @@ class AuthResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AuthCreateOrRotateAPIKeyResponse:
         """Create or rotate API Key"""
-        extra_headers = {"PIPELINE-API-KEY": omit, **(extra_headers or {})}
         return self._post(
             "/auth",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                security={},
             ),
             cast_to=AuthCreateOrRotateAPIKeyResponse,
         )
@@ -91,11 +94,14 @@ class AsyncAuthResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AuthCreateOrRotateAPIKeyResponse:
         """Create or rotate API Key"""
-        extra_headers = {"PIPELINE-API-KEY": omit, **(extra_headers or {})}
         return await self._post(
             "/auth",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                security={},
             ),
             cast_to=AuthCreateOrRotateAPIKeyResponse,
         )
