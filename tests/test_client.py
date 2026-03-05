@@ -402,7 +402,7 @@ class TestPipeline:
     def test_validate_headers(self) -> None:
         client = Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("PIPELINE-API-KEY") == api_key
+        assert request.headers.get("X-API-KEY") == api_key
 
         with pytest.raises(PipelineError):
             with update_env(**{"PIPELINE_API_KEY": Omit()}):
@@ -854,7 +854,7 @@ class TestPipeline:
         respx_mock.post("/auth").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.auth.with_streaming_response.create_or_rotate_api_key().__enter__()
+            client.auth.with_streaming_response.authenticate().__enter__()
 
         assert _get_open_connections(client) == 0
 
@@ -864,7 +864,7 @@ class TestPipeline:
         respx_mock.post("/auth").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.auth.with_streaming_response.create_or_rotate_api_key().__enter__()
+            client.auth.with_streaming_response.authenticate().__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -893,7 +893,7 @@ class TestPipeline:
 
         respx_mock.post("/auth").mock(side_effect=retry_handler)
 
-        response = client.auth.with_raw_response.create_or_rotate_api_key()
+        response = client.auth.with_raw_response.authenticate()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -917,9 +917,7 @@ class TestPipeline:
 
         respx_mock.post("/auth").mock(side_effect=retry_handler)
 
-        response = client.auth.with_raw_response.create_or_rotate_api_key(
-            extra_headers={"x-stainless-retry-count": Omit()}
-        )
+        response = client.auth.with_raw_response.authenticate(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -942,9 +940,7 @@ class TestPipeline:
 
         respx_mock.post("/auth").mock(side_effect=retry_handler)
 
-        response = client.auth.with_raw_response.create_or_rotate_api_key(
-            extra_headers={"x-stainless-retry-count": "42"}
-        )
+        response = client.auth.with_raw_response.authenticate(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 
@@ -1297,7 +1293,7 @@ class TestAsyncPipeline:
     def test_validate_headers(self) -> None:
         client = AsyncPipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
-        assert request.headers.get("PIPELINE-API-KEY") == api_key
+        assert request.headers.get("X-API-KEY") == api_key
 
         with pytest.raises(PipelineError):
             with update_env(**{"PIPELINE_API_KEY": Omit()}):
@@ -1766,7 +1762,7 @@ class TestAsyncPipeline:
         respx_mock.post("/auth").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            await async_client.auth.with_streaming_response.create_or_rotate_api_key().__aenter__()
+            await async_client.auth.with_streaming_response.authenticate().__aenter__()
 
         assert _get_open_connections(async_client) == 0
 
@@ -1778,7 +1774,7 @@ class TestAsyncPipeline:
         respx_mock.post("/auth").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            await async_client.auth.with_streaming_response.create_or_rotate_api_key().__aenter__()
+            await async_client.auth.with_streaming_response.authenticate().__aenter__()
         assert _get_open_connections(async_client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -1807,7 +1803,7 @@ class TestAsyncPipeline:
 
         respx_mock.post("/auth").mock(side_effect=retry_handler)
 
-        response = await client.auth.with_raw_response.create_or_rotate_api_key()
+        response = await client.auth.with_raw_response.authenticate()
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1831,9 +1827,7 @@ class TestAsyncPipeline:
 
         respx_mock.post("/auth").mock(side_effect=retry_handler)
 
-        response = await client.auth.with_raw_response.create_or_rotate_api_key(
-            extra_headers={"x-stainless-retry-count": Omit()}
-        )
+        response = await client.auth.with_raw_response.authenticate(extra_headers={"x-stainless-retry-count": Omit()})
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
@@ -1856,9 +1850,7 @@ class TestAsyncPipeline:
 
         respx_mock.post("/auth").mock(side_effect=retry_handler)
 
-        response = await client.auth.with_raw_response.create_or_rotate_api_key(
-            extra_headers={"x-stainless-retry-count": "42"}
-        )
+        response = await client.auth.with_raw_response.authenticate(extra_headers={"x-stainless-retry-count": "42"})
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
 

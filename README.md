@@ -1,7 +1,7 @@
 # Pipeline Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/pipeline_labs.svg?label=pypi%20(stable))](https://pypi.org/project/pipeline_labs/)
+[![PyPI version](https://img.shields.io/pypi/v/pipeline.svg?label=pypi%20(stable))](https://pypi.org/project/pipeline/)
 
 The Pipeline Python library provides convenient access to the Pipeline REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
@@ -16,21 +16,27 @@ The full API of this library can be found in [api.md](api.md).
 ## Installation
 
 ```sh
-# install from PyPI
-pip install pipeline_labs
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/pipeline-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install pipeline`
 
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from pipeline import Pipeline
 
-client = Pipeline()
+client = Pipeline(
+    api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
+)
 
-response = client.auth.create_or_rotate_api_key()
-print(response.key_value)
+response = client.auth.authenticate()
+print(response.api_key)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -43,15 +49,18 @@ so that your API Key is not stored in source control.
 Simply import `AsyncPipeline` instead of `Pipeline` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from pipeline import AsyncPipeline
 
-client = AsyncPipeline()
+client = AsyncPipeline(
+    api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
+)
 
 
 async def main() -> None:
-    response = await client.auth.create_or_rotate_api_key()
-    print(response.key_value)
+    response = await client.auth.authenticate()
+    print(response.api_key)
 
 
 asyncio.run(main())
@@ -66,13 +75,14 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install pipeline_labs[aiohttp]
+# install from this staging repo
+pip install 'pipeline[aiohttp] @ git+ssh://git@github.com/stainless-sdks/pipeline-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
 
 ```python
+import os
 import asyncio
 from pipeline import DefaultAioHttpClient
 from pipeline import AsyncPipeline
@@ -80,10 +90,11 @@ from pipeline import AsyncPipeline
 
 async def main() -> None:
     async with AsyncPipeline(
+        api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.auth.create_or_rotate_api_key()
-        print(response.key_value)
+        response = await client.auth.authenticate()
+        print(response.api_key)
 
 
 asyncio.run(main())
@@ -97,22 +108,6 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
-
-## Nested params
-
-Nested parameters are dictionaries, typed using `TypedDict`, for example:
-
-```python
-from pipeline import Pipeline
-
-client = Pipeline()
-
-response = client.training.start(
-    config={},
-    name="llama-3-train",
-)
-print(response.config)
-```
 
 ## Handling errors
 
@@ -130,7 +125,7 @@ from pipeline import Pipeline
 client = Pipeline()
 
 try:
-    client.auth.create_or_rotate_api_key()
+    client.auth.authenticate()
 except pipeline.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -173,7 +168,7 @@ client = Pipeline(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).auth.create_or_rotate_api_key()
+client.with_options(max_retries=5).auth.authenticate()
 ```
 
 ### Timeouts
@@ -196,7 +191,7 @@ client = Pipeline(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).auth.create_or_rotate_api_key()
+client.with_options(timeout=5.0).auth.authenticate()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -237,16 +232,16 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from pipeline import Pipeline
 
 client = Pipeline()
-response = client.auth.with_raw_response.create_or_rotate_api_key()
+response = client.auth.with_raw_response.authenticate()
 print(response.headers.get('X-My-Header'))
 
-auth = response.parse()  # get the object that `auth.create_or_rotate_api_key()` would have returned
-print(auth.key_value)
+auth = response.parse()  # get the object that `auth.authenticate()` would have returned
+print(auth.api_key)
 ```
 
-These methods return an [`APIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -255,7 +250,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.auth.with_streaming_response.create_or_rotate_api_key() as response:
+with client.auth.with_streaming_response.authenticate() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -350,7 +345,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/Ahmadjamil888/Pipeline_SDK/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/pipeline-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import httpx
 
-from ..types import training_start_params
-from .._types import Body, Query, Headers, NotGiven, not_given
+from ..types import cloud_configure_params
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -16,48 +16,46 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.training_start_response import TrainingStartResponse
 
-__all__ = ["TrainingResource", "AsyncTrainingResource"]
+__all__ = ["CloudResource", "AsyncCloudResource"]
 
 
-class TrainingResource(SyncAPIResource):
+class CloudResource(SyncAPIResource):
+    """Hardware & Cloud Configuration"""
+
     @cached_property
-    def with_raw_response(self) -> TrainingResourceWithRawResponse:
+    def with_raw_response(self) -> CloudResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/pipeline-python#accessing-raw-response-data-eg-headers
         """
-        return TrainingResourceWithRawResponse(self)
+        return CloudResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> TrainingResourceWithStreamingResponse:
+    def with_streaming_response(self) -> CloudResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/pipeline-python#with_streaming_response
         """
-        return TrainingResourceWithStreamingResponse(self)
+        return CloudResourceWithStreamingResponse(self)
 
-    def start(
+    def configure(
         self,
         *,
-        config: training_start_params.Config,
-        name: str,
+        config: object | Omit = omit,
+        provider: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TrainingStartResponse:
-        """Launches a SageMaker training job using server-side AWS credentials.
-
-        Basic plan
-        is restricted to CPU (ml.m5.xlarge), while Pro/Enterprise can access GPUs
-        (ml.g5.xlarge).
+    ) -> object:
+        """
+        Configure optional cloud provider (AWS)
 
         Args:
           extra_headers: Send extra headers
@@ -69,58 +67,57 @@ class TrainingResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._post(
-            "/training",
+            "/cloud/configure",
             body=maybe_transform(
                 {
                     "config": config,
-                    "name": name,
+                    "provider": provider,
                 },
-                training_start_params.TrainingStartParams,
+                cloud_configure_params.CloudConfigureParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TrainingStartResponse,
+            cast_to=object,
         )
 
 
-class AsyncTrainingResource(AsyncAPIResource):
+class AsyncCloudResource(AsyncAPIResource):
+    """Hardware & Cloud Configuration"""
+
     @cached_property
-    def with_raw_response(self) -> AsyncTrainingResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncCloudResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/pipeline-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncTrainingResourceWithRawResponse(self)
+        return AsyncCloudResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncTrainingResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncCloudResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/pipeline-python#with_streaming_response
         """
-        return AsyncTrainingResourceWithStreamingResponse(self)
+        return AsyncCloudResourceWithStreamingResponse(self)
 
-    async def start(
+    async def configure(
         self,
         *,
-        config: training_start_params.Config,
-        name: str,
+        config: object | Omit = omit,
+        provider: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> TrainingStartResponse:
-        """Launches a SageMaker training job using server-side AWS credentials.
-
-        Basic plan
-        is restricted to CPU (ml.m5.xlarge), while Pro/Enterprise can access GPUs
-        (ml.g5.xlarge).
+    ) -> object:
+        """
+        Configure optional cloud provider (AWS)
 
         Args:
           extra_headers: Send extra headers
@@ -132,52 +129,52 @@ class AsyncTrainingResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._post(
-            "/training",
+            "/cloud/configure",
             body=await async_maybe_transform(
                 {
                     "config": config,
-                    "name": name,
+                    "provider": provider,
                 },
-                training_start_params.TrainingStartParams,
+                cloud_configure_params.CloudConfigureParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=TrainingStartResponse,
+            cast_to=object,
         )
 
 
-class TrainingResourceWithRawResponse:
-    def __init__(self, training: TrainingResource) -> None:
-        self._training = training
+class CloudResourceWithRawResponse:
+    def __init__(self, cloud: CloudResource) -> None:
+        self._cloud = cloud
 
-        self.start = to_raw_response_wrapper(
-            training.start,
+        self.configure = to_raw_response_wrapper(
+            cloud.configure,
         )
 
 
-class AsyncTrainingResourceWithRawResponse:
-    def __init__(self, training: AsyncTrainingResource) -> None:
-        self._training = training
+class AsyncCloudResourceWithRawResponse:
+    def __init__(self, cloud: AsyncCloudResource) -> None:
+        self._cloud = cloud
 
-        self.start = async_to_raw_response_wrapper(
-            training.start,
+        self.configure = async_to_raw_response_wrapper(
+            cloud.configure,
         )
 
 
-class TrainingResourceWithStreamingResponse:
-    def __init__(self, training: TrainingResource) -> None:
-        self._training = training
+class CloudResourceWithStreamingResponse:
+    def __init__(self, cloud: CloudResource) -> None:
+        self._cloud = cloud
 
-        self.start = to_streamed_response_wrapper(
-            training.start,
+        self.configure = to_streamed_response_wrapper(
+            cloud.configure,
         )
 
 
-class AsyncTrainingResourceWithStreamingResponse:
-    def __init__(self, training: AsyncTrainingResource) -> None:
-        self._training = training
+class AsyncCloudResourceWithStreamingResponse:
+    def __init__(self, cloud: AsyncCloudResource) -> None:
+        self._cloud = cloud
 
-        self.start = async_to_streamed_response_wrapper(
-            training.start,
+        self.configure = async_to_streamed_response_wrapper(
+            cloud.configure,
         )
