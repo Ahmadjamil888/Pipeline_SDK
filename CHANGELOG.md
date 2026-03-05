@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.0 (2026-03-05)
+
+Full Changelog: [v0.0.4...v0.1.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.4...v0.1.0)
+
+### Features
+
+* **api:** manual updates ([f9bbd26](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/f9bbd26ca60cf7dd50e0a2e9c5e3cec2572c7b20))
+
+
+### Chores
+
+* **internal:** refactor authentication internals ([d639e6c](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/d639e6cd7114f7382de8e49ba7ccc3a05c16b020))
+* update SDK settings ([00a4d37](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/00a4d3783e31693efd9b141780b001c6017b472e))
+* update SDK settings ([f9592f3](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/f9592f3110d0cc4c191f9f1d70927ddd7122ebeb))
+
 ## 0.0.4 (2026-03-01)
 
 Full Changelog: [v0.0.3...v0.0.4](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.3...v0.0.4)
