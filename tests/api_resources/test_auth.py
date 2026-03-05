@@ -9,7 +9,7 @@ import pytest
 
 from pipeline import Pipeline, AsyncPipeline
 from tests.utils import assert_matches_type
-from pipeline.types import AuthCreateOrRotateAPIKeyResponse
+from pipeline.types import AuthAuthenticateResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,29 +19,29 @@ class TestAuth:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_create_or_rotate_api_key(self, client: Pipeline) -> None:
-        auth = client.auth.create_or_rotate_api_key()
-        assert_matches_type(AuthCreateOrRotateAPIKeyResponse, auth, path=["response"])
+    def test_method_authenticate(self, client: Pipeline) -> None:
+        auth = client.auth.authenticate()
+        assert_matches_type(AuthAuthenticateResponse, auth, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_create_or_rotate_api_key(self, client: Pipeline) -> None:
-        response = client.auth.with_raw_response.create_or_rotate_api_key()
+    def test_raw_response_authenticate(self, client: Pipeline) -> None:
+        response = client.auth.with_raw_response.authenticate()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         auth = response.parse()
-        assert_matches_type(AuthCreateOrRotateAPIKeyResponse, auth, path=["response"])
+        assert_matches_type(AuthAuthenticateResponse, auth, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_create_or_rotate_api_key(self, client: Pipeline) -> None:
-        with client.auth.with_streaming_response.create_or_rotate_api_key() as response:
+    def test_streaming_response_authenticate(self, client: Pipeline) -> None:
+        with client.auth.with_streaming_response.authenticate() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             auth = response.parse()
-            assert_matches_type(AuthCreateOrRotateAPIKeyResponse, auth, path=["response"])
+            assert_matches_type(AuthAuthenticateResponse, auth, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -53,28 +53,28 @@ class TestAsyncAuth:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_create_or_rotate_api_key(self, async_client: AsyncPipeline) -> None:
-        auth = await async_client.auth.create_or_rotate_api_key()
-        assert_matches_type(AuthCreateOrRotateAPIKeyResponse, auth, path=["response"])
+    async def test_method_authenticate(self, async_client: AsyncPipeline) -> None:
+        auth = await async_client.auth.authenticate()
+        assert_matches_type(AuthAuthenticateResponse, auth, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_create_or_rotate_api_key(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.auth.with_raw_response.create_or_rotate_api_key()
+    async def test_raw_response_authenticate(self, async_client: AsyncPipeline) -> None:
+        response = await async_client.auth.with_raw_response.authenticate()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         auth = await response.parse()
-        assert_matches_type(AuthCreateOrRotateAPIKeyResponse, auth, path=["response"])
+        assert_matches_type(AuthAuthenticateResponse, auth, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_create_or_rotate_api_key(self, async_client: AsyncPipeline) -> None:
-        async with async_client.auth.with_streaming_response.create_or_rotate_api_key() as response:
+    async def test_streaming_response_authenticate(self, async_client: AsyncPipeline) -> None:
+        async with async_client.auth.with_streaming_response.authenticate() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             auth = await response.parse()
-            assert_matches_type(AuthCreateOrRotateAPIKeyResponse, auth, path=["response"])
+            assert_matches_type(AuthAuthenticateResponse, auth, path=["response"])
 
         assert cast(Any, response.is_closed) is True
