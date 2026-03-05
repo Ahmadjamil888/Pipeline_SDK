@@ -4,8 +4,8 @@ from typing import Optional
 
 from .._models import BaseModel
 
-__all__ = ["AuthCreateOrRotateAPIKeyResponse"]
+__all__ = ["TrainingUpdateStatusResponse"]
 
 
-class AuthCreateOrRotateAPIKeyResponse(BaseModel):
-    key_value: Optional[str] = None
+class TrainingUpdateStatusResponse(BaseModel):
+    status: Optional[str] = None
