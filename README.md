@@ -16,9 +16,12 @@ The full API of this library can be found in [api.md](api.md).
 ## Installation
 
 ```sh
-# install from PyPI
-pip install pipeline
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/pipeline-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install pipeline`
 
 ## Usage
 
@@ -32,8 +35,11 @@ client = Pipeline(
     api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.auth.authenticate()
-print(response.api_key)
+repo_connection = client.repos.connect(
+    provider="github",
+    repo_url="https://github.com/user/my-monorepo",
+)
+print(repo_connection.id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -56,8 +62,11 @@ client = AsyncPipeline(
 
 
 async def main() -> None:
-    response = await client.auth.authenticate()
-    print(response.api_key)
+    repo_connection = await client.repos.connect(
+        provider="github",
+        repo_url="https://github.com/user/my-monorepo",
+    )
+    print(repo_connection.id)
 
 
 asyncio.run(main())
@@ -72,8 +81,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install pipeline[aiohttp]
+# install from this staging repo
+pip install 'pipeline[aiohttp] @ git+ssh://git@github.com/stainless-sdks/pipeline-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -90,8 +99,11 @@ async def main() -> None:
         api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.auth.authenticate()
-        print(response.api_key)
+        repo_connection = await client.repos.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        )
+        print(repo_connection.id)
 
 
 asyncio.run(main())
@@ -105,6 +117,21 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from pipeline import Pipeline
+
+client = Pipeline()
+
+sandbox = client.sandboxes.create(
+    resources={},
+)
+print(sandbox.resources)
+```
 
 ## Handling errors
 
@@ -122,7 +149,10 @@ from pipeline import Pipeline
 client = Pipeline()
 
 try:
-    client.auth.authenticate()
+    client.repos.connect(
+        provider="github",
+        repo_url="https://github.com/user/my-monorepo",
+    )
 except pipeline.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -165,7 +195,10 @@ client = Pipeline(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).auth.authenticate()
+client.with_options(max_retries=5).repos.connect(
+    provider="github",
+    repo_url="https://github.com/user/my-monorepo",
+)
 ```
 
 ### Timeouts
@@ -188,7 +221,10 @@ client = Pipeline(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).auth.authenticate()
+client.with_options(timeout=5.0).repos.connect(
+    provider="github",
+    repo_url="https://github.com/user/my-monorepo",
+)
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -229,16 +265,19 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from pipeline import Pipeline
 
 client = Pipeline()
-response = client.auth.with_raw_response.authenticate()
+response = client.repos.with_raw_response.connect(
+    provider="github",
+    repo_url="https://github.com/user/my-monorepo",
+)
 print(response.headers.get('X-My-Header'))
 
-auth = response.parse()  # get the object that `auth.authenticate()` would have returned
-print(auth.api_key)
+repo = response.parse()  # get the object that `repos.connect()` would have returned
+print(repo.id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -247,7 +286,10 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.auth.with_streaming_response.authenticate() as response:
+with client.repos.with_streaming_response.connect(
+    provider="github",
+    repo_url="https://github.com/user/my-monorepo",
+) as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -342,7 +384,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/Ahmadjamil888/Pipeline_SDK/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/pipeline-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 
