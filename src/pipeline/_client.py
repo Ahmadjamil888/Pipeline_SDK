@@ -32,12 +32,12 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import auth, cloud, agents, compute, training
-    from .resources.cloud import CloudResource, AsyncCloudResource
-    from .resources.agents import AgentsResource, AsyncAgentsResource
-    from .resources.compute import ComputeResource, AsyncComputeResource
-    from .resources.auth.auth import AuthResource, AsyncAuthResource
-    from .resources.training.training import TrainingResource, AsyncTrainingResource
+    from .resources import repos, health, billing, sandboxes, deployments
+    from .resources.repos import ReposResource, AsyncReposResource
+    from .resources.health import HealthResource, AsyncHealthResource
+    from .resources.billing import BillingResource, AsyncBillingResource
+    from .resources.sandboxes import SandboxesResource, AsyncSandboxesResource
+    from .resources.deployments import DeploymentsResource, AsyncDeploymentsResource
 
 __all__ = [
     "Timeout",
@@ -93,7 +93,7 @@ class Pipeline(SyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("PIPELINE_BASE_URL")
         if base_url is None:
-            base_url = f"http://localhost:8000/api/v1"
+            base_url = f"https://pipeline-ai-labs-by-ahmad.up.railway.app/api/v1"
 
         super().__init__(
             version=__version__,
@@ -107,39 +107,34 @@ class Pipeline(SyncAPIClient):
         )
 
     @cached_property
-    def auth(self) -> AuthResource:
-        """Auth & Key Management"""
-        from .resources.auth import AuthResource
+    def repos(self) -> ReposResource:
+        from .resources.repos import ReposResource
 
-        return AuthResource(self)
-
-    @cached_property
-    def agents(self) -> AgentsResource:
-        """Agentic AI services (Data Clean, Monitor, Optimize, Summarize)"""
-        from .resources.agents import AgentsResource
-
-        return AgentsResource(self)
+        return ReposResource(self)
 
     @cached_property
-    def training(self) -> TrainingResource:
-        """BYOC Training Orchestration"""
-        from .resources.training import TrainingResource
+    def deployments(self) -> DeploymentsResource:
+        from .resources.deployments import DeploymentsResource
 
-        return TrainingResource(self)
-
-    @cached_property
-    def compute(self) -> ComputeResource:
-        """Hardware & Cloud Configuration"""
-        from .resources.compute import ComputeResource
-
-        return ComputeResource(self)
+        return DeploymentsResource(self)
 
     @cached_property
-    def cloud(self) -> CloudResource:
-        """Hardware & Cloud Configuration"""
-        from .resources.cloud import CloudResource
+    def sandboxes(self) -> SandboxesResource:
+        from .resources.sandboxes import SandboxesResource
 
-        return CloudResource(self)
+        return SandboxesResource(self)
+
+    @cached_property
+    def health(self) -> HealthResource:
+        from .resources.health import HealthResource
+
+        return HealthResource(self)
+
+    @cached_property
+    def billing(self) -> BillingResource:
+        from .resources.billing import BillingResource
+
+        return BillingResource(self)
 
     @cached_property
     def with_raw_response(self) -> PipelineWithRawResponse:
@@ -157,13 +152,13 @@ class Pipeline(SyncAPIClient):
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
         return {
-            **(self._api_key_auth if security.get("api_key_auth", False) else {}),
+            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
         }
 
     @property
-    def _api_key_auth(self) -> dict[str, str]:
+    def _bearer_auth(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"X-API-KEY": api_key}
+        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -301,7 +296,7 @@ class AsyncPipeline(AsyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("PIPELINE_BASE_URL")
         if base_url is None:
-            base_url = f"http://localhost:8000/api/v1"
+            base_url = f"https://pipeline-ai-labs-by-ahmad.up.railway.app/api/v1"
 
         super().__init__(
             version=__version__,
@@ -315,39 +310,34 @@ class AsyncPipeline(AsyncAPIClient):
         )
 
     @cached_property
-    def auth(self) -> AsyncAuthResource:
-        """Auth & Key Management"""
-        from .resources.auth import AsyncAuthResource
+    def repos(self) -> AsyncReposResource:
+        from .resources.repos import AsyncReposResource
 
-        return AsyncAuthResource(self)
-
-    @cached_property
-    def agents(self) -> AsyncAgentsResource:
-        """Agentic AI services (Data Clean, Monitor, Optimize, Summarize)"""
-        from .resources.agents import AsyncAgentsResource
-
-        return AsyncAgentsResource(self)
+        return AsyncReposResource(self)
 
     @cached_property
-    def training(self) -> AsyncTrainingResource:
-        """BYOC Training Orchestration"""
-        from .resources.training import AsyncTrainingResource
+    def deployments(self) -> AsyncDeploymentsResource:
+        from .resources.deployments import AsyncDeploymentsResource
 
-        return AsyncTrainingResource(self)
-
-    @cached_property
-    def compute(self) -> AsyncComputeResource:
-        """Hardware & Cloud Configuration"""
-        from .resources.compute import AsyncComputeResource
-
-        return AsyncComputeResource(self)
+        return AsyncDeploymentsResource(self)
 
     @cached_property
-    def cloud(self) -> AsyncCloudResource:
-        """Hardware & Cloud Configuration"""
-        from .resources.cloud import AsyncCloudResource
+    def sandboxes(self) -> AsyncSandboxesResource:
+        from .resources.sandboxes import AsyncSandboxesResource
 
-        return AsyncCloudResource(self)
+        return AsyncSandboxesResource(self)
+
+    @cached_property
+    def health(self) -> AsyncHealthResource:
+        from .resources.health import AsyncHealthResource
+
+        return AsyncHealthResource(self)
+
+    @cached_property
+    def billing(self) -> AsyncBillingResource:
+        from .resources.billing import AsyncBillingResource
+
+        return AsyncBillingResource(self)
 
     @cached_property
     def with_raw_response(self) -> AsyncPipelineWithRawResponse:
@@ -365,13 +355,13 @@ class AsyncPipeline(AsyncAPIClient):
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
         return {
-            **(self._api_key_auth if security.get("api_key_auth", False) else {}),
+            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
         }
 
     @property
-    def _api_key_auth(self) -> dict[str, str]:
+    def _bearer_auth(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"X-API-KEY": api_key}
+        return {"Authorization": f"Bearer {api_key}"}
 
     @property
     @override
@@ -474,39 +464,34 @@ class PipelineWithRawResponse:
         self._client = client
 
     @cached_property
-    def auth(self) -> auth.AuthResourceWithRawResponse:
-        """Auth & Key Management"""
-        from .resources.auth import AuthResourceWithRawResponse
+    def repos(self) -> repos.ReposResourceWithRawResponse:
+        from .resources.repos import ReposResourceWithRawResponse
 
-        return AuthResourceWithRawResponse(self._client.auth)
-
-    @cached_property
-    def agents(self) -> agents.AgentsResourceWithRawResponse:
-        """Agentic AI services (Data Clean, Monitor, Optimize, Summarize)"""
-        from .resources.agents import AgentsResourceWithRawResponse
-
-        return AgentsResourceWithRawResponse(self._client.agents)
+        return ReposResourceWithRawResponse(self._client.repos)
 
     @cached_property
-    def training(self) -> training.TrainingResourceWithRawResponse:
-        """BYOC Training Orchestration"""
-        from .resources.training import TrainingResourceWithRawResponse
+    def deployments(self) -> deployments.DeploymentsResourceWithRawResponse:
+        from .resources.deployments import DeploymentsResourceWithRawResponse
 
-        return TrainingResourceWithRawResponse(self._client.training)
-
-    @cached_property
-    def compute(self) -> compute.ComputeResourceWithRawResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.compute import ComputeResourceWithRawResponse
-
-        return ComputeResourceWithRawResponse(self._client.compute)
+        return DeploymentsResourceWithRawResponse(self._client.deployments)
 
     @cached_property
-    def cloud(self) -> cloud.CloudResourceWithRawResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.cloud import CloudResourceWithRawResponse
+    def sandboxes(self) -> sandboxes.SandboxesResourceWithRawResponse:
+        from .resources.sandboxes import SandboxesResourceWithRawResponse
 
-        return CloudResourceWithRawResponse(self._client.cloud)
+        return SandboxesResourceWithRawResponse(self._client.sandboxes)
+
+    @cached_property
+    def health(self) -> health.HealthResourceWithRawResponse:
+        from .resources.health import HealthResourceWithRawResponse
+
+        return HealthResourceWithRawResponse(self._client.health)
+
+    @cached_property
+    def billing(self) -> billing.BillingResourceWithRawResponse:
+        from .resources.billing import BillingResourceWithRawResponse
+
+        return BillingResourceWithRawResponse(self._client.billing)
 
 
 class AsyncPipelineWithRawResponse:
@@ -516,39 +501,34 @@ class AsyncPipelineWithRawResponse:
         self._client = client
 
     @cached_property
-    def auth(self) -> auth.AsyncAuthResourceWithRawResponse:
-        """Auth & Key Management"""
-        from .resources.auth import AsyncAuthResourceWithRawResponse
+    def repos(self) -> repos.AsyncReposResourceWithRawResponse:
+        from .resources.repos import AsyncReposResourceWithRawResponse
 
-        return AsyncAuthResourceWithRawResponse(self._client.auth)
-
-    @cached_property
-    def agents(self) -> agents.AsyncAgentsResourceWithRawResponse:
-        """Agentic AI services (Data Clean, Monitor, Optimize, Summarize)"""
-        from .resources.agents import AsyncAgentsResourceWithRawResponse
-
-        return AsyncAgentsResourceWithRawResponse(self._client.agents)
+        return AsyncReposResourceWithRawResponse(self._client.repos)
 
     @cached_property
-    def training(self) -> training.AsyncTrainingResourceWithRawResponse:
-        """BYOC Training Orchestration"""
-        from .resources.training import AsyncTrainingResourceWithRawResponse
+    def deployments(self) -> deployments.AsyncDeploymentsResourceWithRawResponse:
+        from .resources.deployments import AsyncDeploymentsResourceWithRawResponse
 
-        return AsyncTrainingResourceWithRawResponse(self._client.training)
-
-    @cached_property
-    def compute(self) -> compute.AsyncComputeResourceWithRawResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.compute import AsyncComputeResourceWithRawResponse
-
-        return AsyncComputeResourceWithRawResponse(self._client.compute)
+        return AsyncDeploymentsResourceWithRawResponse(self._client.deployments)
 
     @cached_property
-    def cloud(self) -> cloud.AsyncCloudResourceWithRawResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.cloud import AsyncCloudResourceWithRawResponse
+    def sandboxes(self) -> sandboxes.AsyncSandboxesResourceWithRawResponse:
+        from .resources.sandboxes import AsyncSandboxesResourceWithRawResponse
 
-        return AsyncCloudResourceWithRawResponse(self._client.cloud)
+        return AsyncSandboxesResourceWithRawResponse(self._client.sandboxes)
+
+    @cached_property
+    def health(self) -> health.AsyncHealthResourceWithRawResponse:
+        from .resources.health import AsyncHealthResourceWithRawResponse
+
+        return AsyncHealthResourceWithRawResponse(self._client.health)
+
+    @cached_property
+    def billing(self) -> billing.AsyncBillingResourceWithRawResponse:
+        from .resources.billing import AsyncBillingResourceWithRawResponse
+
+        return AsyncBillingResourceWithRawResponse(self._client.billing)
 
 
 class PipelineWithStreamedResponse:
@@ -558,39 +538,34 @@ class PipelineWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def auth(self) -> auth.AuthResourceWithStreamingResponse:
-        """Auth & Key Management"""
-        from .resources.auth import AuthResourceWithStreamingResponse
+    def repos(self) -> repos.ReposResourceWithStreamingResponse:
+        from .resources.repos import ReposResourceWithStreamingResponse
 
-        return AuthResourceWithStreamingResponse(self._client.auth)
-
-    @cached_property
-    def agents(self) -> agents.AgentsResourceWithStreamingResponse:
-        """Agentic AI services (Data Clean, Monitor, Optimize, Summarize)"""
-        from .resources.agents import AgentsResourceWithStreamingResponse
-
-        return AgentsResourceWithStreamingResponse(self._client.agents)
+        return ReposResourceWithStreamingResponse(self._client.repos)
 
     @cached_property
-    def training(self) -> training.TrainingResourceWithStreamingResponse:
-        """BYOC Training Orchestration"""
-        from .resources.training import TrainingResourceWithStreamingResponse
+    def deployments(self) -> deployments.DeploymentsResourceWithStreamingResponse:
+        from .resources.deployments import DeploymentsResourceWithStreamingResponse
 
-        return TrainingResourceWithStreamingResponse(self._client.training)
-
-    @cached_property
-    def compute(self) -> compute.ComputeResourceWithStreamingResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.compute import ComputeResourceWithStreamingResponse
-
-        return ComputeResourceWithStreamingResponse(self._client.compute)
+        return DeploymentsResourceWithStreamingResponse(self._client.deployments)
 
     @cached_property
-    def cloud(self) -> cloud.CloudResourceWithStreamingResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.cloud import CloudResourceWithStreamingResponse
+    def sandboxes(self) -> sandboxes.SandboxesResourceWithStreamingResponse:
+        from .resources.sandboxes import SandboxesResourceWithStreamingResponse
 
-        return CloudResourceWithStreamingResponse(self._client.cloud)
+        return SandboxesResourceWithStreamingResponse(self._client.sandboxes)
+
+    @cached_property
+    def health(self) -> health.HealthResourceWithStreamingResponse:
+        from .resources.health import HealthResourceWithStreamingResponse
+
+        return HealthResourceWithStreamingResponse(self._client.health)
+
+    @cached_property
+    def billing(self) -> billing.BillingResourceWithStreamingResponse:
+        from .resources.billing import BillingResourceWithStreamingResponse
+
+        return BillingResourceWithStreamingResponse(self._client.billing)
 
 
 class AsyncPipelineWithStreamedResponse:
@@ -600,39 +575,34 @@ class AsyncPipelineWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def auth(self) -> auth.AsyncAuthResourceWithStreamingResponse:
-        """Auth & Key Management"""
-        from .resources.auth import AsyncAuthResourceWithStreamingResponse
+    def repos(self) -> repos.AsyncReposResourceWithStreamingResponse:
+        from .resources.repos import AsyncReposResourceWithStreamingResponse
 
-        return AsyncAuthResourceWithStreamingResponse(self._client.auth)
-
-    @cached_property
-    def agents(self) -> agents.AsyncAgentsResourceWithStreamingResponse:
-        """Agentic AI services (Data Clean, Monitor, Optimize, Summarize)"""
-        from .resources.agents import AsyncAgentsResourceWithStreamingResponse
-
-        return AsyncAgentsResourceWithStreamingResponse(self._client.agents)
+        return AsyncReposResourceWithStreamingResponse(self._client.repos)
 
     @cached_property
-    def training(self) -> training.AsyncTrainingResourceWithStreamingResponse:
-        """BYOC Training Orchestration"""
-        from .resources.training import AsyncTrainingResourceWithStreamingResponse
+    def deployments(self) -> deployments.AsyncDeploymentsResourceWithStreamingResponse:
+        from .resources.deployments import AsyncDeploymentsResourceWithStreamingResponse
 
-        return AsyncTrainingResourceWithStreamingResponse(self._client.training)
-
-    @cached_property
-    def compute(self) -> compute.AsyncComputeResourceWithStreamingResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.compute import AsyncComputeResourceWithStreamingResponse
-
-        return AsyncComputeResourceWithStreamingResponse(self._client.compute)
+        return AsyncDeploymentsResourceWithStreamingResponse(self._client.deployments)
 
     @cached_property
-    def cloud(self) -> cloud.AsyncCloudResourceWithStreamingResponse:
-        """Hardware & Cloud Configuration"""
-        from .resources.cloud import AsyncCloudResourceWithStreamingResponse
+    def sandboxes(self) -> sandboxes.AsyncSandboxesResourceWithStreamingResponse:
+        from .resources.sandboxes import AsyncSandboxesResourceWithStreamingResponse
 
-        return AsyncCloudResourceWithStreamingResponse(self._client.cloud)
+        return AsyncSandboxesResourceWithStreamingResponse(self._client.sandboxes)
+
+    @cached_property
+    def health(self) -> health.AsyncHealthResourceWithStreamingResponse:
+        from .resources.health import AsyncHealthResourceWithStreamingResponse
+
+        return AsyncHealthResourceWithStreamingResponse(self._client.health)
+
+    @cached_property
+    def billing(self) -> billing.AsyncBillingResourceWithStreamingResponse:
+        from .resources.billing import AsyncBillingResourceWithStreamingResponse
+
+        return AsyncBillingResourceWithStreamingResponse(self._client.billing)
 
 
 Client = Pipeline
