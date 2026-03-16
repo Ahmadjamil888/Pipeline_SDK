@@ -1,0 +1,288 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+import os
+from typing import Any, cast
+
+import pytest
+
+from pipeline import Pipeline, AsyncPipeline
+from tests.utils import assert_matches_type
+from pipeline.types import RepoConnection, RepoAnalyzeResponse
+
+base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
+
+
+class TestRepos:
+    parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve(self, client: Pipeline) -> None:
+        repo = client.repos.retrieve(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_retrieve(self, client: Pipeline) -> None:
+        response = client.repos.with_raw_response.retrieve(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        repo = response.parse()
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_retrieve(self, client: Pipeline) -> None:
+        with client.repos.with_streaming_response.retrieve(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            repo = response.parse()
+            assert_matches_type(RepoConnection, repo, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_retrieve(self, client: Pipeline) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
+            client.repos.with_raw_response.retrieve(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_analyze(self, client: Pipeline) -> None:
+        repo = client.repos.analyze(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_analyze(self, client: Pipeline) -> None:
+        response = client.repos.with_raw_response.analyze(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        repo = response.parse()
+        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_analyze(self, client: Pipeline) -> None:
+        with client.repos.with_streaming_response.analyze(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            repo = response.parse()
+            assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_analyze(self, client: Pipeline) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
+            client.repos.with_raw_response.analyze(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_connect(self, client: Pipeline) -> None:
+        repo = client.repos.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        )
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_connect_with_all_params(self, client: Pipeline) -> None:
+        repo = client.repos.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+            branch="main",
+            name="my-monorepo",
+        )
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_connect(self, client: Pipeline) -> None:
+        response = client.repos.with_raw_response.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        repo = response.parse()
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_connect(self, client: Pipeline) -> None:
+        with client.repos.with_streaming_response.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            repo = response.parse()
+            assert_matches_type(RepoConnection, repo, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+
+class TestAsyncRepos:
+    parametrize = pytest.mark.parametrize(
+        "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
+    )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve(self, async_client: AsyncPipeline) -> None:
+        repo = await async_client.repos.retrieve(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_retrieve(self, async_client: AsyncPipeline) -> None:
+        response = await async_client.repos.with_raw_response.retrieve(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        repo = await response.parse()
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_retrieve(self, async_client: AsyncPipeline) -> None:
+        async with async_client.repos.with_streaming_response.retrieve(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            repo = await response.parse()
+            assert_matches_type(RepoConnection, repo, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_retrieve(self, async_client: AsyncPipeline) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
+            await async_client.repos.with_raw_response.retrieve(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_analyze(self, async_client: AsyncPipeline) -> None:
+        repo = await async_client.repos.analyze(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_analyze(self, async_client: AsyncPipeline) -> None:
+        response = await async_client.repos.with_raw_response.analyze(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        repo = await response.parse()
+        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_analyze(self, async_client: AsyncPipeline) -> None:
+        async with async_client.repos.with_streaming_response.analyze(
+            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            repo = await response.parse()
+            assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_analyze(self, async_client: AsyncPipeline) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
+            await async_client.repos.with_raw_response.analyze(
+                "",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_connect(self, async_client: AsyncPipeline) -> None:
+        repo = await async_client.repos.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        )
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_connect_with_all_params(self, async_client: AsyncPipeline) -> None:
+        repo = await async_client.repos.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+            branch="main",
+            name="my-monorepo",
+        )
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_connect(self, async_client: AsyncPipeline) -> None:
+        response = await async_client.repos.with_raw_response.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        repo = await response.parse()
+        assert_matches_type(RepoConnection, repo, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_connect(self, async_client: AsyncPipeline) -> None:
+        async with async_client.repos.with_streaming_response.connect(
+            provider="github",
+            repo_url="https://github.com/user/my-monorepo",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            repo = await response.parse()
+            assert_matches_type(RepoConnection, repo, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
