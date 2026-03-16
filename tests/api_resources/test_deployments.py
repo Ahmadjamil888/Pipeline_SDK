@@ -7,16 +7,16 @@ from typing import Any, cast
 
 import pytest
 
-from pipeline import Pipeline, AsyncPipeline
 from tests.utils import assert_matches_type
-from pipeline.types import (
+from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs.types import (
     DeploymentStatus,
     DeploymentExecution,
     DeploymentListResponse,
     DeploymentCreateResponse,
     DeploymentGetLogsResponse,
 )
-from pipeline._utils import parse_datetime
+from pipeline_labs._utils import parse_datetime
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 

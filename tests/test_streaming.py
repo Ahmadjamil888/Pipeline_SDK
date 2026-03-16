@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from pipeline import Pipeline, AsyncPipeline
-from pipeline._streaming import Stream, AsyncStream, ServerSentEvent
+from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio
