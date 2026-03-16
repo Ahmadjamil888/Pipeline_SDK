@@ -5,8 +5,8 @@ from typing import Union
 
 import pydantic
 
-from pipeline import _compat
-from pipeline._utils._json import openapi_dumps
+from pipeline_labs import _compat
+from pipeline_labs._utils._json import openapi_dumps
 
 
 class TestOpenapiDumps:

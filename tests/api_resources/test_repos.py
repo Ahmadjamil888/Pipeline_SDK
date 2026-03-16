@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from pipeline import Pipeline, AsyncPipeline
 from tests.utils import assert_matches_type
-from pipeline.types import RepoConnection, RepoAnalyzeResponse
+from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs.types import RepoConnection, RepoAnalyzeResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
