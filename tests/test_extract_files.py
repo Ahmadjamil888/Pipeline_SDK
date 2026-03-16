@@ -4,8 +4,8 @@ from typing import Sequence
 
 import pytest
 
-from pipeline._types import FileTypes
-from pipeline._utils import extract_files
+from pipeline_labs._types import FileTypes
+from pipeline_labs._utils import extract_files
 
 
 def test_removes_files_from_input() -> None:

@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from pipeline._types import Base64FileInput, omit, not_given
-from pipeline._utils import (
+from pipeline_labs._types import Base64FileInput, omit, not_given
+from pipeline_labs._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from pipeline._compat import PYDANTIC_V1
-from pipeline._models import BaseModel
+from pipeline_labs._compat import PYDANTIC_V1
+from pipeline_labs._models import BaseModel
 
 _T = TypeVar("_T")
 

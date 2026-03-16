@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from pipeline._utils import PropertyInfo
-from pipeline._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
-from pipeline._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
+from pipeline_labs._utils import PropertyInfo
+from pipeline_labs._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
+from pipeline_labs._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
 
 
 class BasicModel(BaseModel):
