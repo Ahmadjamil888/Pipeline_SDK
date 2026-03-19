@@ -34,4 +34,3 @@ class Sandbox(BaseModel):
     stopped_at: Optional[datetime] = None
 
     workspace_url: Optional[str] = None
-    """URL to access the Daytona workspace"""

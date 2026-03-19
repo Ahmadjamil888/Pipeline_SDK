@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Union, Iterable
+from typing import Union
 from datetime import datetime
 from typing_extensions import Literal
 
@@ -52,11 +52,10 @@ class DeploymentsResource(SyncAPIResource):
     def create(
         self,
         *,
-        repo_id: str,
-        services: Iterable[deployment_create_params.Service],
-        branch: str | Omit = omit,
-        env_variables: Dict[str, str] | Omit = omit,
-        environment: Literal["development", "staging", "production"] | Omit = omit,
+        installation_id: int,
+        repo_full_name: str,
+        user_id: str,
+        default_branch: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -64,14 +63,12 @@ class DeploymentsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DeploymentCreateResponse:
-        """
-        Create a new deployment plan based on repository analysis
+        """Create a new deployment for a repository.
+
+        Triggers the AI pipeline in the
+        background.
 
         Args:
-          branch: Branch to deploy from
-
-          env_variables: Environment variables for all services
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -84,11 +81,10 @@ class DeploymentsResource(SyncAPIResource):
             "/deployments",
             body=maybe_transform(
                 {
-                    "repo_id": repo_id,
-                    "services": services,
-                    "branch": branch,
-                    "env_variables": env_variables,
-                    "environment": environment,
+                    "installation_id": installation_id,
+                    "repo_full_name": repo_full_name,
+                    "user_id": user_id,
+                    "default_branch": default_branch,
                 },
                 deployment_create_params.DeploymentCreateParams,
             ),
@@ -264,7 +260,7 @@ class DeploymentsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DeploymentGetLogsResponse:
         """
-        Retrieve logs from the Daytona sandbox for this deployment
+        Retrieve logs from the Daytona sandbox for this deployment.
 
         Args:
           since: Return logs since this timestamp (ISO 8601)
@@ -356,11 +352,10 @@ class AsyncDeploymentsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        repo_id: str,
-        services: Iterable[deployment_create_params.Service],
-        branch: str | Omit = omit,
-        env_variables: Dict[str, str] | Omit = omit,
-        environment: Literal["development", "staging", "production"] | Omit = omit,
+        installation_id: int,
+        repo_full_name: str,
+        user_id: str,
+        default_branch: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -368,14 +363,12 @@ class AsyncDeploymentsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DeploymentCreateResponse:
-        """
-        Create a new deployment plan based on repository analysis
+        """Create a new deployment for a repository.
+
+        Triggers the AI pipeline in the
+        background.
 
         Args:
-          branch: Branch to deploy from
-
-          env_variables: Environment variables for all services
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -388,11 +381,10 @@ class AsyncDeploymentsResource(AsyncAPIResource):
             "/deployments",
             body=await async_maybe_transform(
                 {
-                    "repo_id": repo_id,
-                    "services": services,
-                    "branch": branch,
-                    "env_variables": env_variables,
-                    "environment": environment,
+                    "installation_id": installation_id,
+                    "repo_full_name": repo_full_name,
+                    "user_id": user_id,
+                    "default_branch": default_branch,
                 },
                 deployment_create_params.DeploymentCreateParams,
             ),
@@ -568,7 +560,7 @@ class AsyncDeploymentsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DeploymentGetLogsResponse:
         """
-        Retrieve logs from the Daytona sandbox for this deployment
+        Retrieve logs from the Daytona sandbox for this deployment.
 
         Args:
           since: Return logs since this timestamp (ISO 8601)

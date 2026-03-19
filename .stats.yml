@@ -1,4 +1,4 @@
-configured_endpoints: 26
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/zehanxtech%2Fpipeline-c5e5bcdf498b850554fb411041b729b54dca25a788b2ef1e4c0bb6d53ab59d11.yml
-openapi_spec_hash: ef64943895bc6b0fe755c52411ab1068
-config_hash: b0f3aa92ae2805c0093fd293f45231f5
+configured_endpoints: 30
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/zehanxtech%2Fpipeline-898c825b0615bfa2d3f5690c4457be1437b4d8aaabaa2a9591e4b852531c217f.yml
+openapi_spec_hash: 88ffb76d5b7a22156ebf4bc76632a05e
+config_hash: 67a064264a178d10221fe3fc837820af

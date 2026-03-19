@@ -35,11 +35,8 @@ client = Pipeline(
     api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
 )
 
-repo_connection = client.repos.connect(
-    provider="github",
-    repo_url="https://github.com/user/my-monorepo",
-)
-print(repo_connection.id)
+response = client.webhooks.handle_github()
+print(response.message)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -62,11 +59,8 @@ client = AsyncPipeline(
 
 
 async def main() -> None:
-    repo_connection = await client.repos.connect(
-        provider="github",
-        repo_url="https://github.com/user/my-monorepo",
-    )
-    print(repo_connection.id)
+    response = await client.webhooks.handle_github()
+    print(response.message)
 
 
 asyncio.run(main())
@@ -99,11 +93,8 @@ async def main() -> None:
         api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        repo_connection = await client.repos.connect(
-            provider="github",
-            repo_url="https://github.com/user/my-monorepo",
-        )
-        print(repo_connection.id)
+        response = await client.webhooks.handle_github()
+        print(response.message)
 
 
 asyncio.run(main())
@@ -127,10 +118,10 @@ from pipeline_labs import Pipeline
 
 client = Pipeline()
 
-sandbox = client.sandboxes.create(
-    resources={},
+response = client.webhooks.handle_github(
+    installation={},
 )
-print(sandbox.resources)
+print(response.installation)
 ```
 
 ## Handling errors
@@ -149,10 +140,7 @@ from pipeline_labs import Pipeline
 client = Pipeline()
 
 try:
-    client.repos.connect(
-        provider="github",
-        repo_url="https://github.com/user/my-monorepo",
-    )
+    client.webhooks.handle_github()
 except pipeline_labs.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -195,10 +183,7 @@ client = Pipeline(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).repos.connect(
-    provider="github",
-    repo_url="https://github.com/user/my-monorepo",
-)
+client.with_options(max_retries=5).webhooks.handle_github()
 ```
 
 ### Timeouts
@@ -221,10 +206,7 @@ client = Pipeline(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).repos.connect(
-    provider="github",
-    repo_url="https://github.com/user/my-monorepo",
-)
+client.with_options(timeout=5.0).webhooks.handle_github()
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -265,14 +247,11 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from pipeline_labs import Pipeline
 
 client = Pipeline()
-response = client.repos.with_raw_response.connect(
-    provider="github",
-    repo_url="https://github.com/user/my-monorepo",
-)
+response = client.webhooks.with_raw_response.handle_github()
 print(response.headers.get('X-My-Header'))
 
-repo = response.parse()  # get the object that `repos.connect()` would have returned
-print(repo.id)
+webhook = response.parse()  # get the object that `webhooks.handle_github()` would have returned
+print(webhook.message)
 ```
 
 These methods return an [`APIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline_labs/_response.py) object.
@@ -286,10 +265,7 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.repos.with_streaming_response.connect(
-    provider="github",
-    repo_url="https://github.com/user/my-monorepo",
-) as response:
+with client.webhooks.with_streaming_response.handle_github() as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():

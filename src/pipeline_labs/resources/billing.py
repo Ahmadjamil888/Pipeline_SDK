@@ -91,7 +91,7 @@ class BillingResource(SyncAPIResource):
         self,
         *,
         cancel_url: str,
-        plan_id: Literal["starter", "pro", "team"],
+        plan_id: Literal["pro", "team"],
         success_url: str,
         user_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -312,7 +312,7 @@ class AsyncBillingResource(AsyncAPIResource):
         self,
         *,
         cancel_url: str,
-        plan_id: Literal["starter", "pro", "team"],
+        plan_id: Literal["pro", "team"],
         success_url: str,
         user_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.

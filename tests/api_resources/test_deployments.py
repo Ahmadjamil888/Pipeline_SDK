@@ -28,14 +28,9 @@ class TestDeployments:
     @parametrize
     def test_method_create(self, client: Pipeline) -> None:
         deployment = client.deployments.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                }
-            ],
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
         )
         assert_matches_type(DeploymentCreateResponse, deployment, path=["response"])
 
@@ -43,31 +38,10 @@ class TestDeployments:
     @parametrize
     def test_method_create_with_all_params(self, client: Pipeline) -> None:
         deployment = client.deployments.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                    "build_command": "build_command",
-                    "env_variables": {"foo": "string"},
-                    "output_directory": "output_directory",
-                    "render_config": {
-                        "plan": "plan",
-                        "service_name": "service_name",
-                        "service_type": "web_service",
-                    },
-                    "start_command": "start_command",
-                    "vercel_config": {
-                        "framework": "framework",
-                        "project_name": "project_name",
-                        "team_id": "team_id",
-                    },
-                }
-            ],
-            branch="branch",
-            env_variables={"foo": "string"},
-            environment="development",
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
+            default_branch="default_branch",
         )
         assert_matches_type(DeploymentCreateResponse, deployment, path=["response"])
 
@@ -75,14 +49,9 @@ class TestDeployments:
     @parametrize
     def test_raw_response_create(self, client: Pipeline) -> None:
         response = client.deployments.with_raw_response.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                }
-            ],
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
         )
 
         assert response.is_closed is True
@@ -94,14 +63,9 @@ class TestDeployments:
     @parametrize
     def test_streaming_response_create(self, client: Pipeline) -> None:
         with client.deployments.with_streaming_response.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                }
-            ],
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -380,14 +344,9 @@ class TestAsyncDeployments:
     @parametrize
     async def test_method_create(self, async_client: AsyncPipeline) -> None:
         deployment = await async_client.deployments.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                }
-            ],
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
         )
         assert_matches_type(DeploymentCreateResponse, deployment, path=["response"])
 
@@ -395,31 +354,10 @@ class TestAsyncDeployments:
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncPipeline) -> None:
         deployment = await async_client.deployments.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                    "build_command": "build_command",
-                    "env_variables": {"foo": "string"},
-                    "output_directory": "output_directory",
-                    "render_config": {
-                        "plan": "plan",
-                        "service_name": "service_name",
-                        "service_type": "web_service",
-                    },
-                    "start_command": "start_command",
-                    "vercel_config": {
-                        "framework": "framework",
-                        "project_name": "project_name",
-                        "team_id": "team_id",
-                    },
-                }
-            ],
-            branch="branch",
-            env_variables={"foo": "string"},
-            environment="development",
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
+            default_branch="default_branch",
         )
         assert_matches_type(DeploymentCreateResponse, deployment, path=["response"])
 
@@ -427,14 +365,9 @@ class TestAsyncDeployments:
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncPipeline) -> None:
         response = await async_client.deployments.with_raw_response.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                }
-            ],
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
         )
 
         assert response.is_closed is True
@@ -446,14 +379,9 @@ class TestAsyncDeployments:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncPipeline) -> None:
         async with async_client.deployments.with_streaming_response.create(
-            repo_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            services=[
-                {
-                    "name": "name",
-                    "path": "path",
-                    "platform": "vercel",
-                }
-            ],
+            installation_id=0,
+            repo_full_name="repo_full_name",
+            user_id="user_id",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

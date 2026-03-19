@@ -16,7 +16,6 @@ class SandboxOpenTerminalResponse(BaseModel):
     session_id: str
 
     websocket_url: str
-    """WebSocket URL for terminal connection"""
 
     expires_at: Optional[datetime] = None
 
