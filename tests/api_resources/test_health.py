@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
+from pipeline import Pipeline, AsyncPipeline
 from tests.utils import assert_matches_type
-from pipeline_labs import PipelineLabs, AsyncPipelineLabs
-from pipeline_labs.types import HealthCheckResponse
+from pipeline.types import HealthCheckResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -19,13 +19,13 @@ class TestHealth:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_check(self, client: PipelineLabs) -> None:
+    def test_method_check(self, client: Pipeline) -> None:
         health = client.health.check()
         assert_matches_type(HealthCheckResponse, health, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_check(self, client: PipelineLabs) -> None:
+    def test_raw_response_check(self, client: Pipeline) -> None:
         response = client.health.with_raw_response.check()
 
         assert response.is_closed is True
@@ -35,7 +35,7 @@ class TestHealth:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_check(self, client: PipelineLabs) -> None:
+    def test_streaming_response_check(self, client: Pipeline) -> None:
         with client.health.with_streaming_response.check() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -53,13 +53,13 @@ class TestAsyncHealth:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_check(self, async_client: AsyncPipelineLabs) -> None:
+    async def test_method_check(self, async_client: AsyncPipeline) -> None:
         health = await async_client.health.check()
         assert_matches_type(HealthCheckResponse, health, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_check(self, async_client: AsyncPipelineLabs) -> None:
+    async def test_raw_response_check(self, async_client: AsyncPipeline) -> None:
         response = await async_client.health.with_raw_response.check()
 
         assert response.is_closed is True
@@ -69,7 +69,7 @@ class TestAsyncHealth:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_check(self, async_client: AsyncPipelineLabs) -> None:
+    async def test_streaming_response_check(self, async_client: AsyncPipeline) -> None:
         async with async_client.health.with_streaming_response.check() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

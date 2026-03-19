@@ -8,8 +8,8 @@ from typing import Any, TypeVar, Iterator, Sequence, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, get_origin, assert_type
 
-from pipeline_labs._types import Omit, NoneType
-from pipeline_labs._utils import (
+from pipeline._types import Omit, NoneType
+from pipeline._utils import (
     is_dict,
     is_list,
     is_list_type,
@@ -19,8 +19,8 @@ from pipeline_labs._utils import (
     is_annotated_type,
     is_type_alias_type,
 )
-from pipeline_labs._compat import PYDANTIC_V1, field_outer_type, get_model_fields
-from pipeline_labs._models import BaseModel
+from pipeline._compat import PYDANTIC_V1, field_outer_type, get_model_fields
+from pipeline._models import BaseModel
 
 BaseModelT = TypeVar("BaseModelT", bound=BaseModel)
 
