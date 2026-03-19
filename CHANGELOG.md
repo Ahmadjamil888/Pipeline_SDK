@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.2.0 (2026-03-19)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** manual updates ([3900ea2](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/3900ea2ef0b4e7ff843ea0f5394f8496e446899c))
+* **api:** manual updates ([9d5b779](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/9d5b7790ac6bea6a26b670dd32afe443db976be3))
+* **api:** manual updates ([8de66e6](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/8de66e66378adddbb49abb20db5eb136d47b7218))
+* **api:** manual updates ([a4344a5](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/a4344a5a098b705092d4a76060125996383c0da8))
+* **api:** manual updates ([427594d](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/427594da947768391366d5e77990824793b8819b))
+
+
+### Bug Fixes
+
+* **deps:** bump minimum typing-extensions version ([89c552c](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/89c552c652b87f356cfafe3934a555da9e0cc22d))
+* **pydantic:** do not pass `by_alias` unless set ([84997bb](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/84997bbfbcbbfecb9ebe02c66f7c6db1b3db4068))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([0c547e3](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/0c547e303fa9c1047843cf149386f0814503801f))
+* **internal:** tweak CI branches ([ac1231e](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/ac1231e39c3c5efe623bc1a6808dba9b08d83ab5))
+* update SDK settings ([0b076e2](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/0b076e23c2fa3034f9f12bb9ab7a298be803aa96))
+
 ## 0.1.0 (2026-03-05)
 
 Full Changelog: [v0.0.4...v0.1.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.0.4...v0.1.0)
