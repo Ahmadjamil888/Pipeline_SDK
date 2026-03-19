@@ -2,24 +2,23 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal
-
 import httpx
 
-from ..types import repo_connect_params
-from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
-from .._compat import cached_property
-from .._resource import SyncAPIResource, AsyncAPIResource
-from .._response import (
+from ..._types import Body, Query, Headers, NotGiven, not_given
+from ..._utils import maybe_transform, async_maybe_transform
+from ..._compat import cached_property
+from ..._resource import SyncAPIResource, AsyncAPIResource
+from ..._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.repo_connection import RepoConnection
-from ..types.repo_analyze_response import RepoAnalyzeResponse
+from ..._base_client import make_request_options
+from ...types.github import repo_list_params, repo_connect_params
+from ...types.github.repository_param import RepositoryParam
+from ...types.github.repo_list_response import RepoListResponse
+from ...types.github.repo_connect_response import RepoConnectResponse
 
 __all__ = ["ReposResource", "AsyncReposResource"]
 
@@ -31,7 +30,7 @@ class ReposResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/pipeline-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#accessing-raw-response-data-eg-headers
         """
         return ReposResourceWithRawResponse(self)
 
@@ -40,23 +39,23 @@ class ReposResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/pipeline-python#with_streaming_response
+        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#with_streaming_response
         """
         return ReposResourceWithStreamingResponse(self)
 
-    def retrieve(
+    def list(
         self,
-        repo_id: str,
         *,
+        user_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoConnection:
+    ) -> RepoListResponse:
         """
-        Get repository details
+        Returns repositories accessible via the stored GitHub token.
 
         Args:
           extra_headers: Send extra headers
@@ -67,65 +66,32 @@ class ReposResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not repo_id:
-            raise ValueError(f"Expected a non-empty value for `repo_id` but received {repo_id!r}")
         return self._get(
-            f"/repos/{repo_id}",
+            "/github/repos",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"user_id": user_id}, repo_list_params.RepoListParams),
             ),
-            cast_to=RepoConnection,
-        )
-
-    def analyze(
-        self,
-        repo_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoAnalyzeResponse:
-        """
-        Analyze repository structure
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not repo_id:
-            raise ValueError(f"Expected a non-empty value for `repo_id` but received {repo_id!r}")
-        return self._post(
-            f"/repos/{repo_id}/analyze",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=RepoAnalyzeResponse,
+            cast_to=RepoListResponse,
         )
 
     def connect(
         self,
         *,
-        provider: Literal["github", "gitlab"],
-        repo_url: str,
-        branch: str | Omit = omit,
-        name: str | Omit = omit,
+        repo: RepositoryParam,
+        user_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoConnection:
+    ) -> RepoConnectResponse:
         """
-        Connect a Git repository
+        Creates a project in the database and starts the AI deployment pipeline.
 
         Args:
           extra_headers: Send extra headers
@@ -137,20 +103,18 @@ class ReposResource(SyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return self._post(
-            "/repos/connect",
+            "/github/repos/connect",
             body=maybe_transform(
                 {
-                    "provider": provider,
-                    "repo_url": repo_url,
-                    "branch": branch,
-                    "name": name,
+                    "repo": repo,
+                    "user_id": user_id,
                 },
                 repo_connect_params.RepoConnectParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=RepoConnection,
+            cast_to=RepoConnectResponse,
         )
 
 
@@ -161,7 +125,7 @@ class AsyncReposResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/pipeline-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#accessing-raw-response-data-eg-headers
         """
         return AsyncReposResourceWithRawResponse(self)
 
@@ -170,23 +134,23 @@ class AsyncReposResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/pipeline-python#with_streaming_response
+        For more information, see https://www.github.com/Ahmadjamil888/Pipeline_SDK#with_streaming_response
         """
         return AsyncReposResourceWithStreamingResponse(self)
 
-    async def retrieve(
+    async def list(
         self,
-        repo_id: str,
         *,
+        user_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoConnection:
+    ) -> RepoListResponse:
         """
-        Get repository details
+        Returns repositories accessible via the stored GitHub token.
 
         Args:
           extra_headers: Send extra headers
@@ -197,65 +161,32 @@ class AsyncReposResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        if not repo_id:
-            raise ValueError(f"Expected a non-empty value for `repo_id` but received {repo_id!r}")
         return await self._get(
-            f"/repos/{repo_id}",
+            "/github/repos",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"user_id": user_id}, repo_list_params.RepoListParams),
             ),
-            cast_to=RepoConnection,
-        )
-
-    async def analyze(
-        self,
-        repo_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoAnalyzeResponse:
-        """
-        Analyze repository structure
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not repo_id:
-            raise ValueError(f"Expected a non-empty value for `repo_id` but received {repo_id!r}")
-        return await self._post(
-            f"/repos/{repo_id}/analyze",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=RepoAnalyzeResponse,
+            cast_to=RepoListResponse,
         )
 
     async def connect(
         self,
         *,
-        provider: Literal["github", "gitlab"],
-        repo_url: str,
-        branch: str | Omit = omit,
-        name: str | Omit = omit,
+        repo: RepositoryParam,
+        user_id: str,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoConnection:
+    ) -> RepoConnectResponse:
         """
-        Connect a Git repository
+        Creates a project in the database and starts the AI deployment pipeline.
 
         Args:
           extra_headers: Send extra headers
@@ -267,20 +198,18 @@ class AsyncReposResource(AsyncAPIResource):
           timeout: Override the client-level default timeout for this request, in seconds
         """
         return await self._post(
-            "/repos/connect",
+            "/github/repos/connect",
             body=await async_maybe_transform(
                 {
-                    "provider": provider,
-                    "repo_url": repo_url,
-                    "branch": branch,
-                    "name": name,
+                    "repo": repo,
+                    "user_id": user_id,
                 },
                 repo_connect_params.RepoConnectParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=RepoConnection,
+            cast_to=RepoConnectResponse,
         )
 
 
@@ -288,11 +217,8 @@ class ReposResourceWithRawResponse:
     def __init__(self, repos: ReposResource) -> None:
         self._repos = repos
 
-        self.retrieve = to_raw_response_wrapper(
-            repos.retrieve,
-        )
-        self.analyze = to_raw_response_wrapper(
-            repos.analyze,
+        self.list = to_raw_response_wrapper(
+            repos.list,
         )
         self.connect = to_raw_response_wrapper(
             repos.connect,
@@ -303,11 +229,8 @@ class AsyncReposResourceWithRawResponse:
     def __init__(self, repos: AsyncReposResource) -> None:
         self._repos = repos
 
-        self.retrieve = async_to_raw_response_wrapper(
-            repos.retrieve,
-        )
-        self.analyze = async_to_raw_response_wrapper(
-            repos.analyze,
+        self.list = async_to_raw_response_wrapper(
+            repos.list,
         )
         self.connect = async_to_raw_response_wrapper(
             repos.connect,
@@ -318,11 +241,8 @@ class ReposResourceWithStreamingResponse:
     def __init__(self, repos: ReposResource) -> None:
         self._repos = repos
 
-        self.retrieve = to_streamed_response_wrapper(
-            repos.retrieve,
-        )
-        self.analyze = to_streamed_response_wrapper(
-            repos.analyze,
+        self.list = to_streamed_response_wrapper(
+            repos.list,
         )
         self.connect = to_streamed_response_wrapper(
             repos.connect,
@@ -333,11 +253,8 @@ class AsyncReposResourceWithStreamingResponse:
     def __init__(self, repos: AsyncReposResource) -> None:
         self._repos = repos
 
-        self.retrieve = async_to_streamed_response_wrapper(
-            repos.retrieve,
-        )
-        self.analyze = async_to_streamed_response_wrapper(
-            repos.analyze,
+        self.list = async_to_streamed_response_wrapper(
+            repos.list,
         )
         self.connect = async_to_streamed_response_wrapper(
             repos.connect,
