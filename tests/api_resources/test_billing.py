@@ -63,7 +63,7 @@ class TestBilling:
     def test_method_create_checkout_session(self, client: Pipeline) -> None:
         billing = client.billing.create_checkout_session(
             cancel_url="https://example.com",
-            plan_id="starter",
+            plan_id="pro",
             success_url="https://example.com",
             user_id="user_id",
         )
@@ -74,7 +74,7 @@ class TestBilling:
     def test_raw_response_create_checkout_session(self, client: Pipeline) -> None:
         response = client.billing.with_raw_response.create_checkout_session(
             cancel_url="https://example.com",
-            plan_id="starter",
+            plan_id="pro",
             success_url="https://example.com",
             user_id="user_id",
         )
@@ -89,7 +89,7 @@ class TestBilling:
     def test_streaming_response_create_checkout_session(self, client: Pipeline) -> None:
         with client.billing.with_streaming_response.create_checkout_session(
             cancel_url="https://example.com",
-            plan_id="starter",
+            plan_id="pro",
             success_url="https://example.com",
             user_id="user_id",
         ) as response:
@@ -287,7 +287,7 @@ class TestAsyncBilling:
     async def test_method_create_checkout_session(self, async_client: AsyncPipeline) -> None:
         billing = await async_client.billing.create_checkout_session(
             cancel_url="https://example.com",
-            plan_id="starter",
+            plan_id="pro",
             success_url="https://example.com",
             user_id="user_id",
         )
@@ -298,7 +298,7 @@ class TestAsyncBilling:
     async def test_raw_response_create_checkout_session(self, async_client: AsyncPipeline) -> None:
         response = await async_client.billing.with_raw_response.create_checkout_session(
             cancel_url="https://example.com",
-            plan_id="starter",
+            plan_id="pro",
             success_url="https://example.com",
             user_id="user_id",
         )
@@ -313,7 +313,7 @@ class TestAsyncBilling:
     async def test_streaming_response_create_checkout_session(self, async_client: AsyncPipeline) -> None:
         async with async_client.billing.with_streaming_response.create_checkout_session(
             cancel_url="https://example.com",
-            plan_id="starter",
+            plan_id="pro",
             success_url="https://example.com",
             user_id="user_id",
         ) as response:

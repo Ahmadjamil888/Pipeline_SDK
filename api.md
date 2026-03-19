@@ -1,3 +1,29 @@
+# Webhooks
+
+Types:
+
+```python
+from pipeline_labs.types import WebhookHandleGitHubResponse
+```
+
+Methods:
+
+- <code title="post /webhooks/github">client.webhooks.<a href="./src/pipeline_labs/resources/webhooks.py">handle_github</a>(\*\*<a href="src/pipeline_labs/types/webhook_handle_github_params.py">params</a>) -> <a href="./src/pipeline_labs/types/webhook_handle_github_response.py">WebhookHandleGitHubResponse</a></code>
+
+# GitHub
+
+Types:
+
+```python
+from pipeline_labs.types import GitHubInitiateInstallationResponse, GitHubListRepositoriesResponse
+```
+
+Methods:
+
+- <code title="get /github/connect">client.github.<a href="./src/pipeline_labs/resources/github.py">initiate_installation</a>() -> <a href="./src/pipeline_labs/types/github_initiate_installation_response.py">GitHubInitiateInstallationResponse</a></code>
+- <code title="get /github/repos">client.github.<a href="./src/pipeline_labs/resources/github.py">list_repositories</a>(\*\*<a href="src/pipeline_labs/types/github_list_repositories_params.py">params</a>) -> <a href="./src/pipeline_labs/types/github_list_repositories_response.py">GitHubListRepositoriesResponse</a></code>
+- <code title="get /github/setup">client.github.<a href="./src/pipeline_labs/resources/github.py">setup_callback</a>(\*\*<a href="src/pipeline_labs/types/github_setup_callback_params.py">params</a>) -> None</code>
+
 # Repos
 
 Types:

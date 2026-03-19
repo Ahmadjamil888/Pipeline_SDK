@@ -73,11 +73,9 @@ class SandboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Sandbox:
         """
-        Create a new Daytona workspace for isolated execution
+        Create a new Daytona workspace for isolated execution.
 
         Args:
-          repo_id: Optional repo to pre-clone
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -191,7 +189,7 @@ class SandboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """
-        Destroy the Daytona workspace and free resources
+        Destroy the Daytona workspace and free resources.
 
         Args:
           extra_headers: Send extra headers
@@ -229,7 +227,7 @@ class SandboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SandboxExecuteResponse:
         """
-        Run a command inside the Daytona workspace
+        Run a command inside the Daytona workspace.
 
         Args:
           extra_headers: Send extra headers
@@ -272,7 +270,7 @@ class SandboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SandboxGetLogsResponse:
         """
-        Retrieve execution logs from the sandbox
+        Retrieve execution logs from the sandbox.
 
         Args:
           extra_headers: Send extra headers
@@ -312,7 +310,7 @@ class SandboxesResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SandboxOpenTerminalResponse:
         """
-        Open an interactive terminal session inside the sandbox
+        Open an interactive terminal session inside the sandbox.
 
         Args:
           extra_headers: Send extra headers
@@ -444,11 +442,9 @@ class AsyncSandboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Sandbox:
         """
-        Create a new Daytona workspace for isolated execution
+        Create a new Daytona workspace for isolated execution.
 
         Args:
-          repo_id: Optional repo to pre-clone
-
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -562,7 +558,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
         """
-        Destroy the Daytona workspace and free resources
+        Destroy the Daytona workspace and free resources.
 
         Args:
           extra_headers: Send extra headers
@@ -600,7 +596,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SandboxExecuteResponse:
         """
-        Run a command inside the Daytona workspace
+        Run a command inside the Daytona workspace.
 
         Args:
           extra_headers: Send extra headers
@@ -643,7 +639,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SandboxGetLogsResponse:
         """
-        Retrieve execution logs from the sandbox
+        Retrieve execution logs from the sandbox.
 
         Args:
           extra_headers: Send extra headers
@@ -683,7 +679,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SandboxOpenTerminalResponse:
         """
-        Open an interactive terminal session inside the sandbox
+        Open an interactive terminal session inside the sandbox.
 
         Args:
           extra_headers: Send extra headers

@@ -17,4 +17,3 @@ class LogEntry(BaseModel):
     timestamp: datetime
 
     source: Optional[str] = None
-    """Component that generated the log"""

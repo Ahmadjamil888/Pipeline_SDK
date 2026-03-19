@@ -11,7 +11,6 @@ __all__ = ["RepoConnection"]
 
 class RepoConnection(BaseModel):
     id: str
-    """Unique identifier for the connected repository"""
 
     created_at: datetime
 

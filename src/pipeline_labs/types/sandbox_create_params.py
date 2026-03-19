@@ -16,7 +16,6 @@ class SandboxCreateParams(TypedDict, total=False):
     environment_variables: Dict[str, str]
 
     repo_id: str
-    """Optional repo to pre-clone"""
 
     repo_url: str
 
