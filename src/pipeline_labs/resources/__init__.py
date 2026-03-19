@@ -8,6 +8,14 @@ from .repos import (
     ReposResourceWithStreamingResponse,
     AsyncReposResourceWithStreamingResponse,
 )
+from .github import (
+    GitHubResource,
+    AsyncGitHubResource,
+    GitHubResourceWithRawResponse,
+    AsyncGitHubResourceWithRawResponse,
+    GitHubResourceWithStreamingResponse,
+    AsyncGitHubResourceWithStreamingResponse,
+)
 from .health import (
     HealthResource,
     AsyncHealthResource,
@@ -23,6 +31,14 @@ from .billing import (
     AsyncBillingResourceWithRawResponse,
     BillingResourceWithStreamingResponse,
     AsyncBillingResourceWithStreamingResponse,
+)
+from .webhooks import (
+    WebhooksResource,
+    AsyncWebhooksResource,
+    WebhooksResourceWithRawResponse,
+    AsyncWebhooksResourceWithRawResponse,
+    WebhooksResourceWithStreamingResponse,
+    AsyncWebhooksResourceWithStreamingResponse,
 )
 from .sandboxes import (
     SandboxesResource,
@@ -42,6 +58,18 @@ from .deployments import (
 )
 
 __all__ = [
+    "WebhooksResource",
+    "AsyncWebhooksResource",
+    "WebhooksResourceWithRawResponse",
+    "AsyncWebhooksResourceWithRawResponse",
+    "WebhooksResourceWithStreamingResponse",
+    "AsyncWebhooksResourceWithStreamingResponse",
+    "GitHubResource",
+    "AsyncGitHubResource",
+    "GitHubResourceWithRawResponse",
+    "AsyncGitHubResourceWithRawResponse",
+    "GitHubResourceWithStreamingResponse",
+    "AsyncGitHubResourceWithStreamingResponse",
     "ReposResource",
     "AsyncReposResource",
     "ReposResourceWithRawResponse",

@@ -20,7 +20,7 @@ or products provided by Pipeline, please follow the respective company's securit
 
 ### Pipeline Terms and Policies
 
-Please contact support@pipeline.dev for any questions or concerns regarding the security of our services.
+Please contact ahmadjamildhami@gmail.com for any questions or concerns regarding the security of our services.
 
 ---
 

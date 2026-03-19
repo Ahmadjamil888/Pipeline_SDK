@@ -18,7 +18,7 @@ class Usage(BaseModel):
 
 
 class BillingRetrieveSubscriptionStatusResponse(BaseModel):
-    plan: Literal["free", "starter", "pro", "team"]
+    plan: Literal["free", "pro", "team"]
 
     status: Literal["active", "canceled", "past_due", "unpaid"]
 
@@ -32,8 +32,8 @@ class BillingRetrieveSubscriptionStatusResponse(BaseModel):
 
     current_period_start: Optional[datetime] = None
 
-    stripe_customer_id: Optional[str] = None
+    polar_customer_id: Optional[str] = None
 
-    stripe_subscription_id: Optional[str] = None
+    polar_subscription_id: Optional[str] = None
 
     usage: Optional[Usage] = None

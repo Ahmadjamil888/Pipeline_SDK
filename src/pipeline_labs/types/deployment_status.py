@@ -1,58 +1,37 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime
 from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["DeploymentStatus", "Service"]
-
-
-class Service(BaseModel):
-    name: str
-
-    path: str
-
-    platform: Literal["vercel", "render", "docker"]
-
-    status: Literal["pending", "building", "deploying", "deployed", "failed", "skipped"]
-
-    build_logs_url: Optional[str] = None
-
-    completed_at: Optional[datetime] = None
-
-    deployment_url: Optional[str] = None
-
-    error_message: Optional[str] = None
-
-    platform_deployment_id: Optional[str] = None
-    """Deployment ID from the platform (Vercel/Render)"""
-
-    started_at: Optional[datetime] = None
+__all__ = ["DeploymentStatus"]
 
 
 class DeploymentStatus(BaseModel):
     id: str
 
-    repo_id: str
+    created_at: datetime
 
-    services: List[Service]
+    status: Literal[
+        "started",
+        "analyzing",
+        "cloning",
+        "ai_analyzing",
+        "analyzed",
+        "deploying_backend",
+        "deploying_frontend",
+        "success",
+        "failed",
+    ]
 
-    status: Literal["pending", "running", "succeeded", "failed", "cancelled", "retrying"]
+    analysis: Optional[object] = None
 
-    branch: Optional[str] = None
+    backend_url: Optional[str] = None
 
-    completed_at: Optional[datetime] = None
+    error: Optional[str] = None
 
-    duration_seconds: Optional[int] = None
+    frontend_url: Optional[str] = None
 
-    environment: Optional[str] = None
-
-    error_message: Optional[str] = None
-
-    retry_count: Optional[int] = None
-
-    sandbox_id: Optional[str] = None
-
-    started_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None

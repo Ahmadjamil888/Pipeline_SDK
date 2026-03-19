@@ -10,7 +10,7 @@ __all__ = ["BillingCreateCheckoutSessionParams"]
 class BillingCreateCheckoutSessionParams(TypedDict, total=False):
     cancel_url: Required[str]
 
-    plan_id: Required[Literal["starter", "pro", "team"]]
+    plan_id: Required[Literal["pro", "team"]]
 
     success_url: Required[str]
 
