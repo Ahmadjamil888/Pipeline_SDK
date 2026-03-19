@@ -32,12 +32,11 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import repos, github, health, billing, projects, webhooks, sandboxes, deployments
+    from .resources import repos, github, health, billing, projects, sandboxes, deployments
     from .resources.repos import ReposResource, AsyncReposResource
     from .resources.health import HealthResource, AsyncHealthResource
     from .resources.billing import BillingResource, AsyncBillingResource
     from .resources.projects import ProjectsResource, AsyncProjectsResource
-    from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.sandboxes import SandboxesResource, AsyncSandboxesResource
     from .resources.deployments import DeploymentsResource, AsyncDeploymentsResource
     from .resources.github.github import GitHubResource, AsyncGitHubResource
@@ -108,12 +107,6 @@ class Pipeline(SyncAPIClient):
             custom_query=default_query,
             _strict_response_validation=_strict_response_validation,
         )
-
-    @cached_property
-    def webhooks(self) -> WebhooksResource:
-        from .resources.webhooks import WebhooksResource
-
-        return WebhooksResource(self)
 
     @cached_property
     def github(self) -> GitHubResource:
@@ -331,12 +324,6 @@ class AsyncPipeline(AsyncAPIClient):
         )
 
     @cached_property
-    def webhooks(self) -> AsyncWebhooksResource:
-        from .resources.webhooks import AsyncWebhooksResource
-
-        return AsyncWebhooksResource(self)
-
-    @cached_property
     def github(self) -> AsyncGitHubResource:
         from .resources.github import AsyncGitHubResource
 
@@ -503,12 +490,6 @@ class PipelineWithRawResponse:
         self._client = client
 
     @cached_property
-    def webhooks(self) -> webhooks.WebhooksResourceWithRawResponse:
-        from .resources.webhooks import WebhooksResourceWithRawResponse
-
-        return WebhooksResourceWithRawResponse(self._client.webhooks)
-
-    @cached_property
     def github(self) -> github.GitHubResourceWithRawResponse:
         from .resources.github import GitHubResourceWithRawResponse
 
@@ -556,12 +537,6 @@ class AsyncPipelineWithRawResponse:
 
     def __init__(self, client: AsyncPipeline) -> None:
         self._client = client
-
-    @cached_property
-    def webhooks(self) -> webhooks.AsyncWebhooksResourceWithRawResponse:
-        from .resources.webhooks import AsyncWebhooksResourceWithRawResponse
-
-        return AsyncWebhooksResourceWithRawResponse(self._client.webhooks)
 
     @cached_property
     def github(self) -> github.AsyncGitHubResourceWithRawResponse:
@@ -613,12 +588,6 @@ class PipelineWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def webhooks(self) -> webhooks.WebhooksResourceWithStreamingResponse:
-        from .resources.webhooks import WebhooksResourceWithStreamingResponse
-
-        return WebhooksResourceWithStreamingResponse(self._client.webhooks)
-
-    @cached_property
     def github(self) -> github.GitHubResourceWithStreamingResponse:
         from .resources.github import GitHubResourceWithStreamingResponse
 
@@ -666,12 +635,6 @@ class AsyncPipelineWithStreamedResponse:
 
     def __init__(self, client: AsyncPipeline) -> None:
         self._client = client
-
-    @cached_property
-    def webhooks(self) -> webhooks.AsyncWebhooksResourceWithStreamingResponse:
-        from .resources.webhooks import AsyncWebhooksResourceWithStreamingResponse
-
-        return AsyncWebhooksResourceWithStreamingResponse(self._client.webhooks)
 
     @cached_property
     def github(self) -> github.AsyncGitHubResourceWithStreamingResponse:

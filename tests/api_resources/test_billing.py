@@ -11,10 +11,9 @@ from tests.utils import assert_matches_type
 from pipeline_labs import Pipeline, AsyncPipeline
 from pipeline_labs.types import (
     BillingListPlansResponse,
-    BillingHandleWebhookResponse,
     BillingCancelSubscriptionResponse,
-    BillingCreatePortalSessionResponse,
     BillingCreateCheckoutSessionResponse,
+    BillingCreateBillingPortalSessionResponse,
     BillingRetrieveSubscriptionStatusResponse,
 )
 
@@ -60,6 +59,43 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_create_billing_portal_session(self, client: Pipeline) -> None:
+        billing = client.billing.create_billing_portal_session(
+            customer_id="customer_id",
+            return_url="https://example.com",
+        )
+        assert_matches_type(BillingCreateBillingPortalSessionResponse, billing, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_create_billing_portal_session(self, client: Pipeline) -> None:
+        response = client.billing.with_raw_response.create_billing_portal_session(
+            customer_id="customer_id",
+            return_url="https://example.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        billing = response.parse()
+        assert_matches_type(BillingCreateBillingPortalSessionResponse, billing, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_create_billing_portal_session(self, client: Pipeline) -> None:
+        with client.billing.with_streaming_response.create_billing_portal_session(
+            customer_id="customer_id",
+            return_url="https://example.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            billing = response.parse()
+            assert_matches_type(BillingCreateBillingPortalSessionResponse, billing, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_method_create_checkout_session(self, client: Pipeline) -> None:
         billing = client.billing.create_checkout_session(
             cancel_url="https://example.com",
@@ -98,77 +134,6 @@ class TestBilling:
 
             billing = response.parse()
             assert_matches_type(BillingCreateCheckoutSessionResponse, billing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_create_portal_session(self, client: Pipeline) -> None:
-        billing = client.billing.create_portal_session(
-            customer_id="customer_id",
-            return_url="https://example.com",
-        )
-        assert_matches_type(BillingCreatePortalSessionResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_create_portal_session(self, client: Pipeline) -> None:
-        response = client.billing.with_raw_response.create_portal_session(
-            customer_id="customer_id",
-            return_url="https://example.com",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        billing = response.parse()
-        assert_matches_type(BillingCreatePortalSessionResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_create_portal_session(self, client: Pipeline) -> None:
-        with client.billing.with_streaming_response.create_portal_session(
-            customer_id="customer_id",
-            return_url="https://example.com",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            billing = response.parse()
-            assert_matches_type(BillingCreatePortalSessionResponse, billing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_handle_webhook(self, client: Pipeline) -> None:
-        billing = client.billing.handle_webhook(
-            body={},
-        )
-        assert_matches_type(BillingHandleWebhookResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_handle_webhook(self, client: Pipeline) -> None:
-        response = client.billing.with_raw_response.handle_webhook(
-            body={},
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        billing = response.parse()
-        assert_matches_type(BillingHandleWebhookResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_handle_webhook(self, client: Pipeline) -> None:
-        with client.billing.with_streaming_response.handle_webhook(
-            body={},
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            billing = response.parse()
-            assert_matches_type(BillingHandleWebhookResponse, billing, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -284,6 +249,43 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    async def test_method_create_billing_portal_session(self, async_client: AsyncPipeline) -> None:
+        billing = await async_client.billing.create_billing_portal_session(
+            customer_id="customer_id",
+            return_url="https://example.com",
+        )
+        assert_matches_type(BillingCreateBillingPortalSessionResponse, billing, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_create_billing_portal_session(self, async_client: AsyncPipeline) -> None:
+        response = await async_client.billing.with_raw_response.create_billing_portal_session(
+            customer_id="customer_id",
+            return_url="https://example.com",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        billing = await response.parse()
+        assert_matches_type(BillingCreateBillingPortalSessionResponse, billing, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_create_billing_portal_session(self, async_client: AsyncPipeline) -> None:
+        async with async_client.billing.with_streaming_response.create_billing_portal_session(
+            customer_id="customer_id",
+            return_url="https://example.com",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            billing = await response.parse()
+            assert_matches_type(BillingCreateBillingPortalSessionResponse, billing, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     async def test_method_create_checkout_session(self, async_client: AsyncPipeline) -> None:
         billing = await async_client.billing.create_checkout_session(
             cancel_url="https://example.com",
@@ -322,77 +324,6 @@ class TestAsyncBilling:
 
             billing = await response.parse()
             assert_matches_type(BillingCreateCheckoutSessionResponse, billing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_create_portal_session(self, async_client: AsyncPipeline) -> None:
-        billing = await async_client.billing.create_portal_session(
-            customer_id="customer_id",
-            return_url="https://example.com",
-        )
-        assert_matches_type(BillingCreatePortalSessionResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_create_portal_session(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.billing.with_raw_response.create_portal_session(
-            customer_id="customer_id",
-            return_url="https://example.com",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        billing = await response.parse()
-        assert_matches_type(BillingCreatePortalSessionResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_create_portal_session(self, async_client: AsyncPipeline) -> None:
-        async with async_client.billing.with_streaming_response.create_portal_session(
-            customer_id="customer_id",
-            return_url="https://example.com",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            billing = await response.parse()
-            assert_matches_type(BillingCreatePortalSessionResponse, billing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_handle_webhook(self, async_client: AsyncPipeline) -> None:
-        billing = await async_client.billing.handle_webhook(
-            body={},
-        )
-        assert_matches_type(BillingHandleWebhookResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_handle_webhook(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.billing.with_raw_response.handle_webhook(
-            body={},
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        billing = await response.parse()
-        assert_matches_type(BillingHandleWebhookResponse, billing, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_handle_webhook(self, async_client: AsyncPipeline) -> None:
-        async with async_client.billing.with_streaming_response.handle_webhook(
-            body={},
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            billing = await response.parse()
-            assert_matches_type(BillingHandleWebhookResponse, billing, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

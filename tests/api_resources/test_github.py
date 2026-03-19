@@ -56,49 +56,6 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_handle_callback(self, client: Pipeline) -> None:
-        github = client.github.handle_callback(
-            code="code",
-        )
-        assert github is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_handle_callback_with_all_params(self, client: Pipeline) -> None:
-        github = client.github.handle_callback(
-            code="code",
-            state="state",
-        )
-        assert github is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_handle_callback(self, client: Pipeline) -> None:
-        response = client.github.with_raw_response.handle_callback(
-            code="code",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        github = response.parse()
-        assert github is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_handle_callback(self, client: Pipeline) -> None:
-        with client.github.with_streaming_response.handle_callback(
-            code="code",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            github = response.parse()
-            assert github is None
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     def test_method_initiate_oauth(self, client: Pipeline) -> None:
         github = client.github.initiate_oauth(
             user_id="user_id",
@@ -168,49 +125,6 @@ class TestAsyncGitHub:
 
             github = await response.parse()
             assert_matches_type(GitHubCheckConnectionStatusResponse, github, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_handle_callback(self, async_client: AsyncPipeline) -> None:
-        github = await async_client.github.handle_callback(
-            code="code",
-        )
-        assert github is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_handle_callback_with_all_params(self, async_client: AsyncPipeline) -> None:
-        github = await async_client.github.handle_callback(
-            code="code",
-            state="state",
-        )
-        assert github is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_handle_callback(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.github.with_raw_response.handle_callback(
-            code="code",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        github = await response.parse()
-        assert github is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_handle_callback(self, async_client: AsyncPipeline) -> None:
-        async with async_client.github.with_streaming_response.handle_callback(
-            code="code",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            github = await response.parse()
-            assert github is None
 
         assert cast(Any, response.is_closed) is True
 

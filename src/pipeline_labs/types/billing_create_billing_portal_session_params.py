@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["BillingCreatePortalSessionParams"]
+__all__ = ["BillingCreateBillingPortalSessionParams"]
 
 
-class BillingCreatePortalSessionParams(TypedDict, total=False):
+class BillingCreateBillingPortalSessionParams(TypedDict, total=False):
     customer_id: Required[str]
 
     return_url: Required[str]
