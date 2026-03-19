@@ -32,8 +32,10 @@ client = Pipeline(
     api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.webhooks.handle_github()
-print(response.message)
+response = client.github.initiate_oauth(
+    user_id="REPLACE_ME",
+)
+print(response.auth_url)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -56,8 +58,10 @@ client = AsyncPipeline(
 
 
 async def main() -> None:
-    response = await client.webhooks.handle_github()
-    print(response.message)
+    response = await client.github.initiate_oauth(
+        user_id="REPLACE_ME",
+    )
+    print(response.auth_url)
 
 
 asyncio.run(main())
@@ -90,8 +94,10 @@ async def main() -> None:
         api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.webhooks.handle_github()
-        print(response.message)
+        response = await client.github.initiate_oauth(
+            user_id="REPLACE_ME",
+        )
+        print(response.auth_url)
 
 
 asyncio.run(main())
@@ -115,10 +121,11 @@ from pipeline_labs import Pipeline
 
 client = Pipeline()
 
-response = client.webhooks.handle_github(
-    installation={},
+response = client.github.repos.connect(
+    repo={},
+    user_id="user_id",
 )
-print(response.installation)
+print(response.repo)
 ```
 
 ## Handling errors
@@ -137,7 +144,9 @@ from pipeline_labs import Pipeline
 client = Pipeline()
 
 try:
-    client.webhooks.handle_github()
+    client.github.initiate_oauth(
+        user_id="REPLACE_ME",
+    )
 except pipeline_labs.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
@@ -180,7 +189,9 @@ client = Pipeline(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).webhooks.handle_github()
+client.with_options(max_retries=5).github.initiate_oauth(
+    user_id="REPLACE_ME",
+)
 ```
 
 ### Timeouts
@@ -203,7 +214,9 @@ client = Pipeline(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).webhooks.handle_github()
+client.with_options(timeout=5.0).github.initiate_oauth(
+    user_id="REPLACE_ME",
+)
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -244,11 +257,13 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from pipeline_labs import Pipeline
 
 client = Pipeline()
-response = client.webhooks.with_raw_response.handle_github()
+response = client.github.with_raw_response.initiate_oauth(
+    user_id="REPLACE_ME",
+)
 print(response.headers.get('X-My-Header'))
 
-webhook = response.parse()  # get the object that `webhooks.handle_github()` would have returned
-print(webhook.message)
+github = response.parse()  # get the object that `github.initiate_oauth()` would have returned
+print(github.auth_url)
 ```
 
 These methods return an [`APIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline_labs/_response.py) object.
@@ -262,7 +277,9 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.webhooks.with_streaming_response.handle_github() as response:
+with client.github.with_streaming_response.initiate_oauth(
+    user_id="REPLACE_ME",
+) as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():

@@ -16,7 +16,6 @@ from pipeline_labs.types import (
     SandboxStartResponse,
     SandboxExecuteResponse,
     SandboxGetLogsResponse,
-    SandboxOpenTerminalResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -150,48 +149,6 @@ class TestSandboxes:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_delete(self, client: Pipeline) -> None:
-        sandbox = client.sandboxes.delete(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert sandbox is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_delete(self, client: Pipeline) -> None:
-        response = client.sandboxes.with_raw_response.delete(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        sandbox = response.parse()
-        assert sandbox is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_delete(self, client: Pipeline) -> None:
-        with client.sandboxes.with_streaming_response.delete(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            sandbox = response.parse()
-            assert sandbox is None
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_delete(self, client: Pipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `sandbox_id` but received ''"):
-            client.sandboxes.with_raw_response.delete(
-                "",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     def test_method_execute(self, client: Pipeline) -> None:
         sandbox = client.sandboxes.execute(
             sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -296,59 +253,6 @@ class TestSandboxes:
     def test_path_params_get_logs(self, client: Pipeline) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `sandbox_id` but received ''"):
             client.sandboxes.with_raw_response.get_logs(
-                sandbox_id="",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_open_terminal(self, client: Pipeline) -> None:
-        sandbox = client.sandboxes.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_open_terminal_with_all_params(self, client: Pipeline) -> None:
-        sandbox = client.sandboxes.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            environment_variables={"foo": "string"},
-            shell="shell",
-            working_directory="working_directory",
-        )
-        assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_open_terminal(self, client: Pipeline) -> None:
-        response = client.sandboxes.with_raw_response.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        sandbox = response.parse()
-        assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_open_terminal(self, client: Pipeline) -> None:
-        with client.sandboxes.with_streaming_response.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            sandbox = response.parse()
-            assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_open_terminal(self, client: Pipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `sandbox_id` but received ''"):
-            client.sandboxes.with_raw_response.open_terminal(
                 sandbox_id="",
             )
 
@@ -567,48 +471,6 @@ class TestAsyncSandboxes:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_delete(self, async_client: AsyncPipeline) -> None:
-        sandbox = await async_client.sandboxes.delete(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert sandbox is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_delete(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.sandboxes.with_raw_response.delete(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        sandbox = await response.parse()
-        assert sandbox is None
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_delete(self, async_client: AsyncPipeline) -> None:
-        async with async_client.sandboxes.with_streaming_response.delete(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            sandbox = await response.parse()
-            assert sandbox is None
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_delete(self, async_client: AsyncPipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `sandbox_id` but received ''"):
-            await async_client.sandboxes.with_raw_response.delete(
-                "",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     async def test_method_execute(self, async_client: AsyncPipeline) -> None:
         sandbox = await async_client.sandboxes.execute(
             sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
@@ -713,59 +575,6 @@ class TestAsyncSandboxes:
     async def test_path_params_get_logs(self, async_client: AsyncPipeline) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `sandbox_id` but received ''"):
             await async_client.sandboxes.with_raw_response.get_logs(
-                sandbox_id="",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_open_terminal(self, async_client: AsyncPipeline) -> None:
-        sandbox = await async_client.sandboxes.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_open_terminal_with_all_params(self, async_client: AsyncPipeline) -> None:
-        sandbox = await async_client.sandboxes.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-            environment_variables={"foo": "string"},
-            shell="shell",
-            working_directory="working_directory",
-        )
-        assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_open_terminal(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.sandboxes.with_raw_response.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        sandbox = await response.parse()
-        assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_open_terminal(self, async_client: AsyncPipeline) -> None:
-        async with async_client.sandboxes.with_streaming_response.open_terminal(
-            sandbox_id="182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            sandbox = await response.parse()
-            assert_matches_type(SandboxOpenTerminalResponse, sandbox, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_open_terminal(self, async_client: AsyncPipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `sandbox_id` but received ''"):
-            await async_client.sandboxes.with_raw_response.open_terminal(
                 sandbox_id="",
             )
 

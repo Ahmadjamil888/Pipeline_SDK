@@ -21,10 +21,9 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.deployment_status import DeploymentStatus
-from ..types.deployment_execution import DeploymentExecution
 from ..types.deployment_list_response import DeploymentListResponse
-from ..types.deployment_cancel_response import DeploymentCancelResponse
 from ..types.deployment_create_response import DeploymentCreateResponse
+from ..types.deployment_execute_response import DeploymentExecuteResponse
 from ..types.deployment_get_logs_response import DeploymentGetLogsResponse
 
 __all__ = ["DeploymentsResource", "AsyncDeploymentsResource"]
@@ -172,39 +171,6 @@ class DeploymentsResource(SyncAPIResource):
             cast_to=DeploymentListResponse,
         )
 
-    def cancel(
-        self,
-        deployment_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeploymentCancelResponse:
-        """
-        Cancel deployment
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not deployment_id:
-            raise ValueError(f"Expected a non-empty value for `deployment_id` but received {deployment_id!r}")
-        return self._post(
-            f"/deployments/{deployment_id}/cancel",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DeploymentCancelResponse,
-        )
-
     def execute(
         self,
         deployment_id: str,
@@ -215,7 +181,7 @@ class DeploymentsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeploymentExecution:
+    ) -> DeploymentExecuteResponse:
         """
         Execute deployment
 
@@ -235,7 +201,7 @@ class DeploymentsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=DeploymentExecution,
+            cast_to=DeploymentExecuteResponse,
         )
 
     def get_logs(
@@ -281,39 +247,6 @@ class DeploymentsResource(SyncAPIResource):
                 ),
             ),
             cast_to=DeploymentGetLogsResponse,
-        )
-
-    def retry(
-        self,
-        deployment_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeploymentExecution:
-        """
-        Retry failed deployment
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not deployment_id:
-            raise ValueError(f"Expected a non-empty value for `deployment_id` but received {deployment_id!r}")
-        return self._post(
-            f"/deployments/{deployment_id}/retry",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DeploymentExecution,
         )
 
 
@@ -459,39 +392,6 @@ class AsyncDeploymentsResource(AsyncAPIResource):
             cast_to=DeploymentListResponse,
         )
 
-    async def cancel(
-        self,
-        deployment_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeploymentCancelResponse:
-        """
-        Cancel deployment
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not deployment_id:
-            raise ValueError(f"Expected a non-empty value for `deployment_id` but received {deployment_id!r}")
-        return await self._post(
-            f"/deployments/{deployment_id}/cancel",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DeploymentCancelResponse,
-        )
-
     async def execute(
         self,
         deployment_id: str,
@@ -502,7 +402,7 @@ class AsyncDeploymentsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeploymentExecution:
+    ) -> DeploymentExecuteResponse:
         """
         Execute deployment
 
@@ -522,7 +422,7 @@ class AsyncDeploymentsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=DeploymentExecution,
+            cast_to=DeploymentExecuteResponse,
         )
 
     async def get_logs(
@@ -570,39 +470,6 @@ class AsyncDeploymentsResource(AsyncAPIResource):
             cast_to=DeploymentGetLogsResponse,
         )
 
-    async def retry(
-        self,
-        deployment_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> DeploymentExecution:
-        """
-        Retry failed deployment
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not deployment_id:
-            raise ValueError(f"Expected a non-empty value for `deployment_id` but received {deployment_id!r}")
-        return await self._post(
-            f"/deployments/{deployment_id}/retry",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=DeploymentExecution,
-        )
-
 
 class DeploymentsResourceWithRawResponse:
     def __init__(self, deployments: DeploymentsResource) -> None:
@@ -617,17 +484,11 @@ class DeploymentsResourceWithRawResponse:
         self.list = to_raw_response_wrapper(
             deployments.list,
         )
-        self.cancel = to_raw_response_wrapper(
-            deployments.cancel,
-        )
         self.execute = to_raw_response_wrapper(
             deployments.execute,
         )
         self.get_logs = to_raw_response_wrapper(
             deployments.get_logs,
-        )
-        self.retry = to_raw_response_wrapper(
-            deployments.retry,
         )
 
 
@@ -644,17 +505,11 @@ class AsyncDeploymentsResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             deployments.list,
         )
-        self.cancel = async_to_raw_response_wrapper(
-            deployments.cancel,
-        )
         self.execute = async_to_raw_response_wrapper(
             deployments.execute,
         )
         self.get_logs = async_to_raw_response_wrapper(
             deployments.get_logs,
-        )
-        self.retry = async_to_raw_response_wrapper(
-            deployments.retry,
         )
 
 
@@ -671,17 +526,11 @@ class DeploymentsResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             deployments.list,
         )
-        self.cancel = to_streamed_response_wrapper(
-            deployments.cancel,
-        )
         self.execute = to_streamed_response_wrapper(
             deployments.execute,
         )
         self.get_logs = to_streamed_response_wrapper(
             deployments.get_logs,
-        )
-        self.retry = to_streamed_response_wrapper(
-            deployments.retry,
         )
 
 
@@ -698,15 +547,9 @@ class AsyncDeploymentsResourceWithStreamingResponse:
         self.list = async_to_streamed_response_wrapper(
             deployments.list,
         )
-        self.cancel = async_to_streamed_response_wrapper(
-            deployments.cancel,
-        )
         self.execute = async_to_streamed_response_wrapper(
             deployments.execute,
         )
         self.get_logs = async_to_streamed_response_wrapper(
             deployments.get_logs,
-        )
-        self.retry = async_to_streamed_response_wrapper(
-            deployments.retry,
         )

@@ -2,8 +2,8 @@
 
 from .._models import BaseModel
 
-__all__ = ["BillingCreatePortalSessionResponse"]
+__all__ = ["BillingCreateBillingPortalSessionResponse"]
 
 
-class BillingCreatePortalSessionResponse(BaseModel):
+class BillingCreateBillingPortalSessionResponse(BaseModel):
     portal_url: str

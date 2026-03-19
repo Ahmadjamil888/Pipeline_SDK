@@ -19,7 +19,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.repo_connection import RepoConnection
-from ..types.repo_analyze_response import RepoAnalyzeResponse
 
 __all__ = ["ReposResource", "AsyncReposResource"]
 
@@ -75,39 +74,6 @@ class ReposResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=RepoConnection,
-        )
-
-    def analyze(
-        self,
-        repo_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoAnalyzeResponse:
-        """
-        Analyze repository structure
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not repo_id:
-            raise ValueError(f"Expected a non-empty value for `repo_id` but received {repo_id!r}")
-        return self._post(
-            f"/repos/{repo_id}/analyze",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=RepoAnalyzeResponse,
         )
 
     def connect(
@@ -207,39 +173,6 @@ class AsyncReposResource(AsyncAPIResource):
             cast_to=RepoConnection,
         )
 
-    async def analyze(
-        self,
-        repo_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RepoAnalyzeResponse:
-        """
-        Analyze repository structure
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not repo_id:
-            raise ValueError(f"Expected a non-empty value for `repo_id` but received {repo_id!r}")
-        return await self._post(
-            f"/repos/{repo_id}/analyze",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=RepoAnalyzeResponse,
-        )
-
     async def connect(
         self,
         *,
@@ -291,9 +224,6 @@ class ReposResourceWithRawResponse:
         self.retrieve = to_raw_response_wrapper(
             repos.retrieve,
         )
-        self.analyze = to_raw_response_wrapper(
-            repos.analyze,
-        )
         self.connect = to_raw_response_wrapper(
             repos.connect,
         )
@@ -305,9 +235,6 @@ class AsyncReposResourceWithRawResponse:
 
         self.retrieve = async_to_raw_response_wrapper(
             repos.retrieve,
-        )
-        self.analyze = async_to_raw_response_wrapper(
-            repos.analyze,
         )
         self.connect = async_to_raw_response_wrapper(
             repos.connect,
@@ -321,9 +248,6 @@ class ReposResourceWithStreamingResponse:
         self.retrieve = to_streamed_response_wrapper(
             repos.retrieve,
         )
-        self.analyze = to_streamed_response_wrapper(
-            repos.analyze,
-        )
         self.connect = to_streamed_response_wrapper(
             repos.connect,
         )
@@ -335,9 +259,6 @@ class AsyncReposResourceWithStreamingResponse:
 
         self.retrieve = async_to_streamed_response_wrapper(
             repos.retrieve,
-        )
-        self.analyze = async_to_streamed_response_wrapper(
-            repos.analyze,
         )
         self.connect = async_to_streamed_response_wrapper(
             repos.connect,
