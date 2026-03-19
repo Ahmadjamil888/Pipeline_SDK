@@ -25,4 +25,4 @@ jobs:
         run: |
           bash ./bin/publish-pypi
         env:
-          PYPI_TOKEN: ${{ secrets.PIPELINE_PYPI_TOKEN || secrets.PYPI_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PIPELINE_LABS_PYPI_TOKEN || secrets.PYPI_TOKEN }}
