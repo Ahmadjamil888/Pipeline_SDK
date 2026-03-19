@@ -8,7 +8,7 @@ from typing import Any, cast
 import pytest
 
 from tests.utils import assert_matches_type
-from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs import PipelineLabs, AsyncPipelineLabs
 from pipeline_labs.types import WebhookHandleGitHubResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -19,13 +19,13 @@ class TestWebhooks:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_handle_github(self, client: Pipeline) -> None:
+    def test_method_handle_github(self, client: PipelineLabs) -> None:
         webhook = client.webhooks.handle_github()
         assert_matches_type(WebhookHandleGitHubResponse, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_handle_github_with_all_params(self, client: Pipeline) -> None:
+    def test_method_handle_github_with_all_params(self, client: PipelineLabs) -> None:
         webhook = client.webhooks.handle_github(
             action="created",
             installation={
@@ -51,7 +51,7 @@ class TestWebhooks:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_handle_github(self, client: Pipeline) -> None:
+    def test_raw_response_handle_github(self, client: PipelineLabs) -> None:
         response = client.webhooks.with_raw_response.handle_github()
 
         assert response.is_closed is True
@@ -61,7 +61,7 @@ class TestWebhooks:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_handle_github(self, client: Pipeline) -> None:
+    def test_streaming_response_handle_github(self, client: PipelineLabs) -> None:
         with client.webhooks.with_streaming_response.handle_github() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -79,13 +79,13 @@ class TestAsyncWebhooks:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_handle_github(self, async_client: AsyncPipeline) -> None:
+    async def test_method_handle_github(self, async_client: AsyncPipelineLabs) -> None:
         webhook = await async_client.webhooks.handle_github()
         assert_matches_type(WebhookHandleGitHubResponse, webhook, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_handle_github_with_all_params(self, async_client: AsyncPipeline) -> None:
+    async def test_method_handle_github_with_all_params(self, async_client: AsyncPipelineLabs) -> None:
         webhook = await async_client.webhooks.handle_github(
             action="created",
             installation={
@@ -111,7 +111,7 @@ class TestAsyncWebhooks:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_handle_github(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_handle_github(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.webhooks.with_raw_response.handle_github()
 
         assert response.is_closed is True
@@ -121,7 +121,7 @@ class TestAsyncWebhooks:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_handle_github(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_handle_github(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.webhooks.with_streaming_response.handle_github() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

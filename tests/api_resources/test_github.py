@@ -8,7 +8,7 @@ from typing import Any, cast
 import pytest
 
 from tests.utils import assert_matches_type
-from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs import PipelineLabs, AsyncPipelineLabs
 from pipeline_labs.types import (
     GitHubListRepositoriesResponse,
     GitHubInitiateInstallationResponse,
@@ -22,13 +22,13 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_initiate_installation(self, client: Pipeline) -> None:
+    def test_method_initiate_installation(self, client: PipelineLabs) -> None:
         github = client.github.initiate_installation()
         assert_matches_type(GitHubInitiateInstallationResponse, github, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_initiate_installation(self, client: Pipeline) -> None:
+    def test_raw_response_initiate_installation(self, client: PipelineLabs) -> None:
         response = client.github.with_raw_response.initiate_installation()
 
         assert response.is_closed is True
@@ -38,7 +38,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_initiate_installation(self, client: Pipeline) -> None:
+    def test_streaming_response_initiate_installation(self, client: PipelineLabs) -> None:
         with client.github.with_streaming_response.initiate_installation() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -50,7 +50,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_list_repositories(self, client: Pipeline) -> None:
+    def test_method_list_repositories(self, client: PipelineLabs) -> None:
         github = client.github.list_repositories(
             user_id="user_id",
         )
@@ -58,7 +58,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_list_repositories(self, client: Pipeline) -> None:
+    def test_raw_response_list_repositories(self, client: PipelineLabs) -> None:
         response = client.github.with_raw_response.list_repositories(
             user_id="user_id",
         )
@@ -70,7 +70,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_list_repositories(self, client: Pipeline) -> None:
+    def test_streaming_response_list_repositories(self, client: PipelineLabs) -> None:
         with client.github.with_streaming_response.list_repositories(
             user_id="user_id",
         ) as response:
@@ -84,7 +84,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_setup_callback(self, client: Pipeline) -> None:
+    def test_method_setup_callback(self, client: PipelineLabs) -> None:
         github = client.github.setup_callback(
             installation_id=0,
         )
@@ -92,7 +92,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_setup_callback_with_all_params(self, client: Pipeline) -> None:
+    def test_method_setup_callback_with_all_params(self, client: PipelineLabs) -> None:
         github = client.github.setup_callback(
             installation_id=0,
             setup_action="install",
@@ -102,7 +102,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_setup_callback(self, client: Pipeline) -> None:
+    def test_raw_response_setup_callback(self, client: PipelineLabs) -> None:
         response = client.github.with_raw_response.setup_callback(
             installation_id=0,
         )
@@ -114,7 +114,7 @@ class TestGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_setup_callback(self, client: Pipeline) -> None:
+    def test_streaming_response_setup_callback(self, client: PipelineLabs) -> None:
         with client.github.with_streaming_response.setup_callback(
             installation_id=0,
         ) as response:
@@ -134,13 +134,13 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_initiate_installation(self, async_client: AsyncPipeline) -> None:
+    async def test_method_initiate_installation(self, async_client: AsyncPipelineLabs) -> None:
         github = await async_client.github.initiate_installation()
         assert_matches_type(GitHubInitiateInstallationResponse, github, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_initiate_installation(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_initiate_installation(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.github.with_raw_response.initiate_installation()
 
         assert response.is_closed is True
@@ -150,7 +150,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_initiate_installation(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_initiate_installation(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.github.with_streaming_response.initiate_installation() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -162,7 +162,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_list_repositories(self, async_client: AsyncPipeline) -> None:
+    async def test_method_list_repositories(self, async_client: AsyncPipelineLabs) -> None:
         github = await async_client.github.list_repositories(
             user_id="user_id",
         )
@@ -170,7 +170,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_list_repositories(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_list_repositories(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.github.with_raw_response.list_repositories(
             user_id="user_id",
         )
@@ -182,7 +182,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_list_repositories(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_list_repositories(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.github.with_streaming_response.list_repositories(
             user_id="user_id",
         ) as response:
@@ -196,7 +196,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_setup_callback(self, async_client: AsyncPipeline) -> None:
+    async def test_method_setup_callback(self, async_client: AsyncPipelineLabs) -> None:
         github = await async_client.github.setup_callback(
             installation_id=0,
         )
@@ -204,7 +204,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_setup_callback_with_all_params(self, async_client: AsyncPipeline) -> None:
+    async def test_method_setup_callback_with_all_params(self, async_client: AsyncPipelineLabs) -> None:
         github = await async_client.github.setup_callback(
             installation_id=0,
             setup_action="install",
@@ -214,7 +214,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_setup_callback(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_setup_callback(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.github.with_raw_response.setup_callback(
             installation_id=0,
         )
@@ -226,7 +226,7 @@ class TestAsyncGitHub:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_setup_callback(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_setup_callback(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.github.with_streaming_response.setup_callback(
             installation_id=0,
         ) as response:

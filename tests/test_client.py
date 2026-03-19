@@ -19,11 +19,11 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from pipeline_labs import Pipeline, AsyncPipeline, APIResponseValidationError
+from pipeline_labs import PipelineLabs, AsyncPipelineLabs, APIResponseValidationError
 from pipeline_labs._types import Omit
 from pipeline_labs._utils import asyncify
 from pipeline_labs._models import BaseModel, FinalRequestOptions
-from pipeline_labs._exceptions import PipelineError, APIStatusError, APITimeoutError, APIResponseValidationError
+from pipeline_labs._exceptions import APIStatusError, APITimeoutError, PipelineLabsError, APIResponseValidationError
 from pipeline_labs._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
@@ -103,7 +103,7 @@ async def _make_async_iterator(iterable: Iterable[T], counter: Optional[Counter]
         yield item
 
 
-def _get_open_connections(client: Pipeline | AsyncPipeline) -> int:
+def _get_open_connections(client: PipelineLabs | AsyncPipelineLabs) -> int:
     transport = client._client._transport
     assert isinstance(transport, httpx.HTTPTransport) or isinstance(transport, httpx.AsyncHTTPTransport)
 
@@ -111,9 +111,9 @@ def _get_open_connections(client: Pipeline | AsyncPipeline) -> int:
     return len(pool._requests)
 
 
-class TestPipeline:
+class TestPipelineLabs:
     @pytest.mark.respx(base_url=base_url)
-    def test_raw_response(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_raw_response(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
         response = client.post("/foo", cast_to=httpx.Response)
@@ -122,7 +122,7 @@ class TestPipeline:
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
-    def test_raw_response_for_binary(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_raw_response_for_binary(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         respx_mock.post("/foo").mock(
             return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
@@ -132,7 +132,7 @@ class TestPipeline:
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
-    def test_copy(self, client: Pipeline) -> None:
+    def test_copy(self, client: PipelineLabs) -> None:
         copied = client.copy()
         assert id(copied) != id(client)
 
@@ -140,7 +140,7 @@ class TestPipeline:
         assert copied.api_key == "another My API Key"
         assert client.api_key == "My API Key"
 
-    def test_copy_default_options(self, client: Pipeline) -> None:
+    def test_copy_default_options(self, client: PipelineLabs) -> None:
         # options that have a default are overridden correctly
         copied = client.copy(max_retries=7)
         assert copied.max_retries == 7
@@ -157,7 +157,7 @@ class TestPipeline:
         assert isinstance(client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = Pipeline(
+        client = PipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -192,7 +192,7 @@ class TestPipeline:
         client.close()
 
     def test_copy_default_query(self) -> None:
-        client = Pipeline(
+        client = PipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -229,7 +229,7 @@ class TestPipeline:
 
         client.close()
 
-    def test_copy_signature(self, client: Pipeline) -> None:
+    def test_copy_signature(self, client: PipelineLabs) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
@@ -246,7 +246,7 @@ class TestPipeline:
             assert copy_param is not None, f"copy() signature is missing the {name} param"
 
     @pytest.mark.skipif(sys.version_info >= (3, 10), reason="fails because of a memory leak that started from 3.12")
-    def test_copy_build_request(self, client: Pipeline) -> None:
+    def test_copy_build_request(self, client: PipelineLabs) -> None:
         options = FinalRequestOptions(method="get", url="/foo")
 
         def build_request(options: FinalRequestOptions) -> None:
@@ -308,7 +308,7 @@ class TestPipeline:
                     print(frame)
             raise AssertionError()
 
-    def test_request_timeout(self, client: Pipeline) -> None:
+    def test_request_timeout(self, client: PipelineLabs) -> None:
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
@@ -318,7 +318,7 @@ class TestPipeline:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = Pipeline(
+        client = PipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
@@ -331,7 +331,7 @@ class TestPipeline:
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
-            client = Pipeline(
+            client = PipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -343,7 +343,7 @@ class TestPipeline:
 
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
-            client = Pipeline(
+            client = PipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -355,7 +355,7 @@ class TestPipeline:
 
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = Pipeline(
+            client = PipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -368,7 +368,7 @@ class TestPipeline:
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             async with httpx.AsyncClient() as http_client:
-                Pipeline(
+                PipelineLabs(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -376,14 +376,14 @@ class TestPipeline:
                 )
 
     def test_default_headers_option(self) -> None:
-        test_client = Pipeline(
+        test_client = PipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        test_client2 = Pipeline(
+        test_client2 = PipelineLabs(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -400,17 +400,17 @@ class TestPipeline:
         test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = PipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
-        with pytest.raises(PipelineError):
+        with pytest.raises(PipelineLabsError):
             with update_env(**{"PIPELINE_API_KEY": Omit()}):
-                client2 = Pipeline(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = PipelineLabs(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     def test_default_query_option(self) -> None:
-        client = Pipeline(
+        client = PipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -429,7 +429,7 @@ class TestPipeline:
 
         client.close()
 
-    def test_request_extra_json(self, client: Pipeline) -> None:
+    def test_request_extra_json(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -463,7 +463,7 @@ class TestPipeline:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": None}
 
-    def test_request_extra_headers(self, client: Pipeline) -> None:
+    def test_request_extra_headers(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -485,7 +485,7 @@ class TestPipeline:
         )
         assert request.headers.get("X-Bar") == "false"
 
-    def test_request_extra_query(self, client: Pipeline) -> None:
+    def test_request_extra_query(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -526,7 +526,7 @@ class TestPipeline:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, client: Pipeline) -> None:
+    def test_multipart_repeating_array(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions.construct(
                 method="post",
@@ -556,7 +556,7 @@ class TestPipeline:
         ]
 
     @pytest.mark.respx(base_url=base_url)
-    def test_binary_content_upload(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_binary_content_upload(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
         file_content = b"Hello, this is a test file."
@@ -581,7 +581,7 @@ class TestPipeline:
             assert counter.value == 0, "the request body should not have been read"
             return httpx.Response(200, content=request.read())
 
-        with Pipeline(
+        with PipelineLabs(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -600,7 +600,7 @@ class TestPipeline:
             assert counter.value == 1
 
     @pytest.mark.respx(base_url=base_url)
-    def test_binary_content_upload_with_body_is_deprecated(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_binary_content_upload_with_body_is_deprecated(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
         file_content = b"Hello, this is a test file."
@@ -620,7 +620,7 @@ class TestPipeline:
         assert response.content == file_content
 
     @pytest.mark.respx(base_url=base_url)
-    def test_basic_union_response(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_basic_union_response(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         class Model1(BaseModel):
             name: str
 
@@ -634,7 +634,7 @@ class TestPipeline:
         assert response.foo == "bar"
 
     @pytest.mark.respx(base_url=base_url)
-    def test_union_response_different_types(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_union_response_different_types(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         """Union of objects with the same field name using a different type"""
 
         class Model1(BaseModel):
@@ -656,7 +656,9 @@ class TestPipeline:
         assert response.foo == 1
 
     @pytest.mark.respx(base_url=base_url)
-    def test_non_application_json_content_type_for_json_data(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_non_application_json_content_type_for_json_data(
+        self, respx_mock: MockRouter, client: PipelineLabs
+    ) -> None:
         """
         Response that sets Content-Type to something other than application/json but returns json data
         """
@@ -677,7 +679,9 @@ class TestPipeline:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = Pipeline(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
+        client = PipelineLabs(
+            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
+        )
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -687,15 +691,17 @@ class TestPipeline:
         client.close()
 
     def test_base_url_env(self) -> None:
-        with update_env(PIPELINE_BASE_URL="http://localhost:5000/from/env"):
-            client = Pipeline(api_key=api_key, _strict_response_validation=True)
+        with update_env(PIPELINE_LABS_BASE_URL="http://localhost:5000/from/env"):
+            client = PipelineLabs(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            Pipeline(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            Pipeline(
+            PipelineLabs(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
+            ),
+            PipelineLabs(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -704,7 +710,7 @@ class TestPipeline:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_trailing_slash(self, client: Pipeline) -> None:
+    def test_base_url_trailing_slash(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -718,8 +724,10 @@ class TestPipeline:
     @pytest.mark.parametrize(
         "client",
         [
-            Pipeline(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            Pipeline(
+            PipelineLabs(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
+            ),
+            PipelineLabs(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -728,7 +736,7 @@ class TestPipeline:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_base_url_no_trailing_slash(self, client: Pipeline) -> None:
+    def test_base_url_no_trailing_slash(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -742,8 +750,10 @@ class TestPipeline:
     @pytest.mark.parametrize(
         "client",
         [
-            Pipeline(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
-            Pipeline(
+            PipelineLabs(
+                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
+            ),
+            PipelineLabs(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -752,7 +762,7 @@ class TestPipeline:
         ],
         ids=["standard", "custom http client"],
     )
-    def test_absolute_request_url(self, client: Pipeline) -> None:
+    def test_absolute_request_url(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -764,7 +774,7 @@ class TestPipeline:
         client.close()
 
     def test_copied_client_does_not_close_http(self) -> None:
-        test_client = Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = PipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -775,7 +785,7 @@ class TestPipeline:
         assert not test_client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        test_client = Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = PipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -783,7 +793,7 @@ class TestPipeline:
         assert test_client.is_closed()
 
     @pytest.mark.respx(base_url=base_url)
-    def test_client_response_validation_error(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_client_response_validation_error(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         class Model(BaseModel):
             foo: str
 
@@ -796,7 +806,9 @@ class TestPipeline:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
+            PipelineLabs(
+                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
+            )
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -805,12 +817,12 @@ class TestPipeline:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = PipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = Pipeline(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = PipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -841,7 +853,7 @@ class TestPipeline:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(
-        self, remaining_retries: int, retry_after: str, timeout: float, client: Pipeline
+        self, remaining_retries: int, retry_after: str, timeout: float, client: PipelineLabs
     ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -850,7 +862,7 @@ class TestPipeline:
 
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         respx_mock.post("/webhooks/github").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
@@ -860,7 +872,7 @@ class TestPipeline:
 
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
-    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         respx_mock.post("/webhooks/github").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
@@ -873,7 +885,7 @@ class TestPipeline:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
         self,
-        client: Pipeline,
+        client: PipelineLabs,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -902,7 +914,7 @@ class TestPipeline:
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
-        self, client: Pipeline, failures_before_success: int, respx_mock: MockRouter
+        self, client: PipelineLabs, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -925,7 +937,7 @@ class TestPipeline:
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
-        self, client: Pipeline, failures_before_success: int, respx_mock: MockRouter
+        self, client: PipelineLabs, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = client.with_options(max_retries=4)
 
@@ -975,7 +987,7 @@ class TestPipeline:
         )
 
     @pytest.mark.respx(base_url=base_url)
-    def test_follow_redirects(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_follow_redirects(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         # Test that the default follow_redirects=True allows following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
@@ -987,7 +999,7 @@ class TestPipeline:
         assert response.json() == {"status": "ok"}
 
     @pytest.mark.respx(base_url=base_url)
-    def test_follow_redirects_disabled(self, respx_mock: MockRouter, client: Pipeline) -> None:
+    def test_follow_redirects_disabled(self, respx_mock: MockRouter, client: PipelineLabs) -> None:
         # Test that follow_redirects=False prevents following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
@@ -1000,9 +1012,9 @@ class TestPipeline:
         assert exc_info.value.response.headers["Location"] == f"{base_url}/redirected"
 
 
-class TestAsyncPipeline:
+class TestAsyncPipelineLabs:
     @pytest.mark.respx(base_url=base_url)
-    async def test_raw_response(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_raw_response(self, respx_mock: MockRouter, async_client: AsyncPipelineLabs) -> None:
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
         response = await async_client.post("/foo", cast_to=httpx.Response)
@@ -1011,7 +1023,7 @@ class TestAsyncPipeline:
         assert response.json() == {"foo": "bar"}
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_raw_response_for_binary(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_for_binary(self, respx_mock: MockRouter, async_client: AsyncPipelineLabs) -> None:
         respx_mock.post("/foo").mock(
             return_value=httpx.Response(200, headers={"Content-Type": "application/binary"}, content='{"foo": "bar"}')
         )
@@ -1021,7 +1033,7 @@ class TestAsyncPipeline:
         assert isinstance(response, httpx.Response)
         assert response.json() == {"foo": "bar"}
 
-    def test_copy(self, async_client: AsyncPipeline) -> None:
+    def test_copy(self, async_client: AsyncPipelineLabs) -> None:
         copied = async_client.copy()
         assert id(copied) != id(async_client)
 
@@ -1029,7 +1041,7 @@ class TestAsyncPipeline:
         assert copied.api_key == "another My API Key"
         assert async_client.api_key == "My API Key"
 
-    def test_copy_default_options(self, async_client: AsyncPipeline) -> None:
+    def test_copy_default_options(self, async_client: AsyncPipelineLabs) -> None:
         # options that have a default are overridden correctly
         copied = async_client.copy(max_retries=7)
         assert copied.max_retries == 7
@@ -1046,7 +1058,7 @@ class TestAsyncPipeline:
         assert isinstance(async_client.timeout, httpx.Timeout)
 
     async def test_copy_default_headers(self) -> None:
-        client = AsyncPipeline(
+        client = AsyncPipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         assert client.default_headers["X-Foo"] == "bar"
@@ -1081,7 +1093,7 @@ class TestAsyncPipeline:
         await client.close()
 
     async def test_copy_default_query(self) -> None:
-        client = AsyncPipeline(
+        client = AsyncPipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
         )
         assert _get_params(client)["foo"] == "bar"
@@ -1118,7 +1130,7 @@ class TestAsyncPipeline:
 
         await client.close()
 
-    def test_copy_signature(self, async_client: AsyncPipeline) -> None:
+    def test_copy_signature(self, async_client: AsyncPipelineLabs) -> None:
         # ensure the same parameters that can be passed to the client are defined in the `.copy()` method
         init_signature = inspect.signature(
             # mypy doesn't like that we access the `__init__` property.
@@ -1135,7 +1147,7 @@ class TestAsyncPipeline:
             assert copy_param is not None, f"copy() signature is missing the {name} param"
 
     @pytest.mark.skipif(sys.version_info >= (3, 10), reason="fails because of a memory leak that started from 3.12")
-    def test_copy_build_request(self, async_client: AsyncPipeline) -> None:
+    def test_copy_build_request(self, async_client: AsyncPipelineLabs) -> None:
         options = FinalRequestOptions(method="get", url="/foo")
 
         def build_request(options: FinalRequestOptions) -> None:
@@ -1197,7 +1209,7 @@ class TestAsyncPipeline:
                     print(frame)
             raise AssertionError()
 
-    async def test_request_timeout(self, async_client: AsyncPipeline) -> None:
+    async def test_request_timeout(self, async_client: AsyncPipelineLabs) -> None:
         request = async_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
         assert timeout == DEFAULT_TIMEOUT
@@ -1209,7 +1221,7 @@ class TestAsyncPipeline:
         assert timeout == httpx.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
-        client = AsyncPipeline(
+        client = AsyncPipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
         )
 
@@ -1222,7 +1234,7 @@ class TestAsyncPipeline:
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
-            client = AsyncPipeline(
+            client = AsyncPipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1234,7 +1246,7 @@ class TestAsyncPipeline:
 
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
-            client = AsyncPipeline(
+            client = AsyncPipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1246,7 +1258,7 @@ class TestAsyncPipeline:
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AsyncPipeline(
+            client = AsyncPipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
             )
 
@@ -1259,7 +1271,7 @@ class TestAsyncPipeline:
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
-                AsyncPipeline(
+                AsyncPipelineLabs(
                     base_url=base_url,
                     api_key=api_key,
                     _strict_response_validation=True,
@@ -1267,14 +1279,14 @@ class TestAsyncPipeline:
                 )
 
     async def test_default_headers_option(self) -> None:
-        test_client = AsyncPipeline(
+        test_client = AsyncPipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
         )
         request = test_client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
-        test_client2 = AsyncPipeline(
+        test_client2 = AsyncPipelineLabs(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1291,17 +1303,17 @@ class TestAsyncPipeline:
         await test_client2.close()
 
     def test_validate_headers(self) -> None:
-        client = AsyncPipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncPipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("Authorization") == f"Bearer {api_key}"
 
-        with pytest.raises(PipelineError):
+        with pytest.raises(PipelineLabsError):
             with update_env(**{"PIPELINE_API_KEY": Omit()}):
-                client2 = AsyncPipeline(base_url=base_url, api_key=None, _strict_response_validation=True)
+                client2 = AsyncPipelineLabs(base_url=base_url, api_key=None, _strict_response_validation=True)
             _ = client2
 
     async def test_default_query_option(self) -> None:
-        client = AsyncPipeline(
+        client = AsyncPipelineLabs(
             base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
@@ -1320,7 +1332,7 @@ class TestAsyncPipeline:
 
         await client.close()
 
-    def test_request_extra_json(self, client: Pipeline) -> None:
+    def test_request_extra_json(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1354,7 +1366,7 @@ class TestAsyncPipeline:
         data = json.loads(request.content.decode("utf-8"))
         assert data == {"foo": "bar", "baz": None}
 
-    def test_request_extra_headers(self, client: Pipeline) -> None:
+    def test_request_extra_headers(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1376,7 +1388,7 @@ class TestAsyncPipeline:
         )
         assert request.headers.get("X-Bar") == "false"
 
-    def test_request_extra_query(self, client: Pipeline) -> None:
+    def test_request_extra_query(self, client: PipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1417,7 +1429,7 @@ class TestAsyncPipeline:
         params = dict(request.url.params)
         assert params == {"foo": "2"}
 
-    def test_multipart_repeating_array(self, async_client: AsyncPipeline) -> None:
+    def test_multipart_repeating_array(self, async_client: AsyncPipelineLabs) -> None:
         request = async_client._build_request(
             FinalRequestOptions.construct(
                 method="post",
@@ -1447,7 +1459,7 @@ class TestAsyncPipeline:
         ]
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_binary_content_upload(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_binary_content_upload(self, respx_mock: MockRouter, async_client: AsyncPipelineLabs) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
         file_content = b"Hello, this is a test file."
@@ -1472,7 +1484,7 @@ class TestAsyncPipeline:
             assert counter.value == 0, "the request body should not have been read"
             return httpx.Response(200, content=await request.aread())
 
-        async with AsyncPipeline(
+        async with AsyncPipelineLabs(
             base_url=base_url,
             api_key=api_key,
             _strict_response_validation=True,
@@ -1492,7 +1504,7 @@ class TestAsyncPipeline:
 
     @pytest.mark.respx(base_url=base_url)
     async def test_binary_content_upload_with_body_is_deprecated(
-        self, respx_mock: MockRouter, async_client: AsyncPipeline
+        self, respx_mock: MockRouter, async_client: AsyncPipelineLabs
     ) -> None:
         respx_mock.post("/upload").mock(side_effect=mirror_request_content)
 
@@ -1513,7 +1525,7 @@ class TestAsyncPipeline:
         assert response.content == file_content
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_basic_union_response(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_basic_union_response(self, respx_mock: MockRouter, async_client: AsyncPipelineLabs) -> None:
         class Model1(BaseModel):
             name: str
 
@@ -1527,7 +1539,9 @@ class TestAsyncPipeline:
         assert response.foo == "bar"
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_union_response_different_types(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_union_response_different_types(
+        self, respx_mock: MockRouter, async_client: AsyncPipelineLabs
+    ) -> None:
         """Union of objects with the same field name using a different type"""
 
         class Model1(BaseModel):
@@ -1550,7 +1564,7 @@ class TestAsyncPipeline:
 
     @pytest.mark.respx(base_url=base_url)
     async def test_non_application_json_content_type_for_json_data(
-        self, respx_mock: MockRouter, async_client: AsyncPipeline
+        self, respx_mock: MockRouter, async_client: AsyncPipelineLabs
     ) -> None:
         """
         Response that sets Content-Type to something other than application/json but returns json data
@@ -1572,7 +1586,7 @@ class TestAsyncPipeline:
         assert response.foo == 2
 
     async def test_base_url_setter(self) -> None:
-        client = AsyncPipeline(
+        client = AsyncPipelineLabs(
             base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
         )
         assert client.base_url == "https://example.com/from_init/"
@@ -1584,17 +1598,17 @@ class TestAsyncPipeline:
         await client.close()
 
     async def test_base_url_env(self) -> None:
-        with update_env(PIPELINE_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncPipeline(api_key=api_key, _strict_response_validation=True)
+        with update_env(PIPELINE_LABS_BASE_URL="http://localhost:5000/from/env"):
+            client = AsyncPipelineLabs(api_key=api_key, _strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1603,7 +1617,7 @@ class TestAsyncPipeline:
         ],
         ids=["standard", "custom http client"],
     )
-    async def test_base_url_trailing_slash(self, client: AsyncPipeline) -> None:
+    async def test_base_url_trailing_slash(self, client: AsyncPipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1617,10 +1631,10 @@ class TestAsyncPipeline:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1629,7 +1643,7 @@ class TestAsyncPipeline:
         ],
         ids=["standard", "custom http client"],
     )
-    async def test_base_url_no_trailing_slash(self, client: AsyncPipeline) -> None:
+    async def test_base_url_no_trailing_slash(self, client: AsyncPipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1643,10 +1657,10 @@ class TestAsyncPipeline:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
             ),
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url="http://localhost:5000/custom/path/",
                 api_key=api_key,
                 _strict_response_validation=True,
@@ -1655,7 +1669,7 @@ class TestAsyncPipeline:
         ],
         ids=["standard", "custom http client"],
     )
-    async def test_absolute_request_url(self, client: AsyncPipeline) -> None:
+    async def test_absolute_request_url(self, client: AsyncPipelineLabs) -> None:
         request = client._build_request(
             FinalRequestOptions(
                 method="post",
@@ -1667,7 +1681,7 @@ class TestAsyncPipeline:
         await client.close()
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        test_client = AsyncPipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = AsyncPipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         assert not test_client.is_closed()
 
         copied = test_client.copy()
@@ -1679,7 +1693,7 @@ class TestAsyncPipeline:
         assert not test_client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        test_client = AsyncPipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        test_client = AsyncPipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
         async with test_client as c2:
             assert c2 is test_client
             assert not c2.is_closed()
@@ -1687,7 +1701,9 @@ class TestAsyncPipeline:
         assert test_client.is_closed()
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_client_response_validation_error(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_client_response_validation_error(
+        self, respx_mock: MockRouter, async_client: AsyncPipelineLabs
+    ) -> None:
         class Model(BaseModel):
             foo: str
 
@@ -1700,7 +1716,7 @@ class TestAsyncPipeline:
 
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AsyncPipeline(
+            AsyncPipelineLabs(
                 base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
             )
 
@@ -1711,12 +1727,12 @@ class TestAsyncPipeline:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncPipeline(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AsyncPipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        non_strict_client = AsyncPipeline(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        non_strict_client = AsyncPipelineLabs(base_url=base_url, api_key=api_key, _strict_response_validation=False)
 
         response = await non_strict_client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1747,7 +1763,7 @@ class TestAsyncPipeline:
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     async def test_parse_retry_after_header(
-        self, remaining_retries: int, retry_after: str, timeout: float, async_client: AsyncPipeline
+        self, remaining_retries: int, retry_after: str, timeout: float, async_client: AsyncPipelineLabs
     ) -> None:
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
@@ -1757,7 +1773,7 @@ class TestAsyncPipeline:
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(
-        self, respx_mock: MockRouter, async_client: AsyncPipeline
+        self, respx_mock: MockRouter, async_client: AsyncPipelineLabs
     ) -> None:
         respx_mock.post("/webhooks/github").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
@@ -1769,7 +1785,7 @@ class TestAsyncPipeline:
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(
-        self, respx_mock: MockRouter, async_client: AsyncPipeline
+        self, respx_mock: MockRouter, async_client: AsyncPipelineLabs
     ) -> None:
         respx_mock.post("/webhooks/github").mock(return_value=httpx.Response(500))
 
@@ -1783,7 +1799,7 @@ class TestAsyncPipeline:
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
         self,
-        async_client: AsyncPipeline,
+        async_client: AsyncPipelineLabs,
         failures_before_success: int,
         failure_mode: Literal["status", "exception"],
         respx_mock: MockRouter,
@@ -1812,7 +1828,7 @@ class TestAsyncPipeline:
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_omit_retry_count_header(
-        self, async_client: AsyncPipeline, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncPipelineLabs, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1837,7 +1853,7 @@ class TestAsyncPipeline:
     @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_overwrite_retry_count_header(
-        self, async_client: AsyncPipeline, failures_before_success: int, respx_mock: MockRouter
+        self, async_client: AsyncPipelineLabs, failures_before_success: int, respx_mock: MockRouter
     ) -> None:
         client = async_client.with_options(max_retries=4)
 
@@ -1893,7 +1909,7 @@ class TestAsyncPipeline:
         )
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_follow_redirects(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_follow_redirects(self, respx_mock: MockRouter, async_client: AsyncPipelineLabs) -> None:
         # Test that the default follow_redirects=True allows following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})
@@ -1905,7 +1921,7 @@ class TestAsyncPipeline:
         assert response.json() == {"status": "ok"}
 
     @pytest.mark.respx(base_url=base_url)
-    async def test_follow_redirects_disabled(self, respx_mock: MockRouter, async_client: AsyncPipeline) -> None:
+    async def test_follow_redirects_disabled(self, respx_mock: MockRouter, async_client: AsyncPipelineLabs) -> None:
         # Test that follow_redirects=False prevents following redirects
         respx_mock.post("/redirect").mock(
             return_value=httpx.Response(302, headers={"Location": f"{base_url}/redirected"})

@@ -1,11 +1,11 @@
 [project]
 name = "pipeline_labs"
 version = "0.1.0"
-description = "The official Python library for the pipeline API"
+description = "The official Python library for the pipeline_labs API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Pipeline", email = "ahmadjamildhami@gmail.com" },
+{ name = "Pipeline Labs", email = "ahmadjamildhami@gmail.com" },
 ]
 
 dependencies = [

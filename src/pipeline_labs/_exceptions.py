@@ -18,11 +18,11 @@ __all__ = [
 ]
 
 
-class PipelineError(Exception):
+class PipelineLabsError(Exception):
     pass
 
 
-class APIError(PipelineError):
+class APIError(PipelineLabsError):
     message: str
     request: httpx.Request
 

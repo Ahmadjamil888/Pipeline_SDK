@@ -8,7 +8,7 @@ from typing import Any, cast
 import pytest
 
 from tests.utils import assert_matches_type
-from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs import PipelineLabs, AsyncPipelineLabs
 from pipeline_labs.types import (
     BillingListPlansResponse,
     BillingHandleWebhookResponse,
@@ -26,7 +26,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_cancel_subscription(self, client: Pipeline) -> None:
+    def test_method_cancel_subscription(self, client: PipelineLabs) -> None:
         billing = client.billing.cancel_subscription(
             subscription_id="subscription_id",
         )
@@ -34,7 +34,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_cancel_subscription(self, client: Pipeline) -> None:
+    def test_raw_response_cancel_subscription(self, client: PipelineLabs) -> None:
         response = client.billing.with_raw_response.cancel_subscription(
             subscription_id="subscription_id",
         )
@@ -46,7 +46,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_cancel_subscription(self, client: Pipeline) -> None:
+    def test_streaming_response_cancel_subscription(self, client: PipelineLabs) -> None:
         with client.billing.with_streaming_response.cancel_subscription(
             subscription_id="subscription_id",
         ) as response:
@@ -60,7 +60,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_create_checkout_session(self, client: Pipeline) -> None:
+    def test_method_create_checkout_session(self, client: PipelineLabs) -> None:
         billing = client.billing.create_checkout_session(
             cancel_url="https://example.com",
             plan_id="pro",
@@ -71,7 +71,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_create_checkout_session(self, client: Pipeline) -> None:
+    def test_raw_response_create_checkout_session(self, client: PipelineLabs) -> None:
         response = client.billing.with_raw_response.create_checkout_session(
             cancel_url="https://example.com",
             plan_id="pro",
@@ -86,7 +86,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_create_checkout_session(self, client: Pipeline) -> None:
+    def test_streaming_response_create_checkout_session(self, client: PipelineLabs) -> None:
         with client.billing.with_streaming_response.create_checkout_session(
             cancel_url="https://example.com",
             plan_id="pro",
@@ -103,7 +103,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_create_portal_session(self, client: Pipeline) -> None:
+    def test_method_create_portal_session(self, client: PipelineLabs) -> None:
         billing = client.billing.create_portal_session(
             customer_id="customer_id",
             return_url="https://example.com",
@@ -112,7 +112,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_create_portal_session(self, client: Pipeline) -> None:
+    def test_raw_response_create_portal_session(self, client: PipelineLabs) -> None:
         response = client.billing.with_raw_response.create_portal_session(
             customer_id="customer_id",
             return_url="https://example.com",
@@ -125,7 +125,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_create_portal_session(self, client: Pipeline) -> None:
+    def test_streaming_response_create_portal_session(self, client: PipelineLabs) -> None:
         with client.billing.with_streaming_response.create_portal_session(
             customer_id="customer_id",
             return_url="https://example.com",
@@ -140,7 +140,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_handle_webhook(self, client: Pipeline) -> None:
+    def test_method_handle_webhook(self, client: PipelineLabs) -> None:
         billing = client.billing.handle_webhook(
             body={},
         )
@@ -148,7 +148,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_handle_webhook(self, client: Pipeline) -> None:
+    def test_raw_response_handle_webhook(self, client: PipelineLabs) -> None:
         response = client.billing.with_raw_response.handle_webhook(
             body={},
         )
@@ -160,7 +160,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_handle_webhook(self, client: Pipeline) -> None:
+    def test_streaming_response_handle_webhook(self, client: PipelineLabs) -> None:
         with client.billing.with_streaming_response.handle_webhook(
             body={},
         ) as response:
@@ -174,13 +174,13 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_list_plans(self, client: Pipeline) -> None:
+    def test_method_list_plans(self, client: PipelineLabs) -> None:
         billing = client.billing.list_plans()
         assert_matches_type(BillingListPlansResponse, billing, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_list_plans(self, client: Pipeline) -> None:
+    def test_raw_response_list_plans(self, client: PipelineLabs) -> None:
         response = client.billing.with_raw_response.list_plans()
 
         assert response.is_closed is True
@@ -190,7 +190,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_list_plans(self, client: Pipeline) -> None:
+    def test_streaming_response_list_plans(self, client: PipelineLabs) -> None:
         with client.billing.with_streaming_response.list_plans() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -202,7 +202,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_retrieve_subscription_status(self, client: Pipeline) -> None:
+    def test_method_retrieve_subscription_status(self, client: PipelineLabs) -> None:
         billing = client.billing.retrieve_subscription_status(
             "user_id",
         )
@@ -210,7 +210,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_raw_response_retrieve_subscription_status(self, client: Pipeline) -> None:
+    def test_raw_response_retrieve_subscription_status(self, client: PipelineLabs) -> None:
         response = client.billing.with_raw_response.retrieve_subscription_status(
             "user_id",
         )
@@ -222,7 +222,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_streaming_response_retrieve_subscription_status(self, client: Pipeline) -> None:
+    def test_streaming_response_retrieve_subscription_status(self, client: PipelineLabs) -> None:
         with client.billing.with_streaming_response.retrieve_subscription_status(
             "user_id",
         ) as response:
@@ -236,7 +236,7 @@ class TestBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_path_params_retrieve_subscription_status(self, client: Pipeline) -> None:
+    def test_path_params_retrieve_subscription_status(self, client: PipelineLabs) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             client.billing.with_raw_response.retrieve_subscription_status(
                 "",
@@ -250,7 +250,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_cancel_subscription(self, async_client: AsyncPipeline) -> None:
+    async def test_method_cancel_subscription(self, async_client: AsyncPipelineLabs) -> None:
         billing = await async_client.billing.cancel_subscription(
             subscription_id="subscription_id",
         )
@@ -258,7 +258,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_cancel_subscription(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_cancel_subscription(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.billing.with_raw_response.cancel_subscription(
             subscription_id="subscription_id",
         )
@@ -270,7 +270,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_cancel_subscription(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_cancel_subscription(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.billing.with_streaming_response.cancel_subscription(
             subscription_id="subscription_id",
         ) as response:
@@ -284,7 +284,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_create_checkout_session(self, async_client: AsyncPipeline) -> None:
+    async def test_method_create_checkout_session(self, async_client: AsyncPipelineLabs) -> None:
         billing = await async_client.billing.create_checkout_session(
             cancel_url="https://example.com",
             plan_id="pro",
@@ -295,7 +295,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_create_checkout_session(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_create_checkout_session(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.billing.with_raw_response.create_checkout_session(
             cancel_url="https://example.com",
             plan_id="pro",
@@ -310,7 +310,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_create_checkout_session(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_create_checkout_session(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.billing.with_streaming_response.create_checkout_session(
             cancel_url="https://example.com",
             plan_id="pro",
@@ -327,7 +327,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_create_portal_session(self, async_client: AsyncPipeline) -> None:
+    async def test_method_create_portal_session(self, async_client: AsyncPipelineLabs) -> None:
         billing = await async_client.billing.create_portal_session(
             customer_id="customer_id",
             return_url="https://example.com",
@@ -336,7 +336,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_create_portal_session(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_create_portal_session(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.billing.with_raw_response.create_portal_session(
             customer_id="customer_id",
             return_url="https://example.com",
@@ -349,7 +349,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_create_portal_session(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_create_portal_session(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.billing.with_streaming_response.create_portal_session(
             customer_id="customer_id",
             return_url="https://example.com",
@@ -364,7 +364,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_handle_webhook(self, async_client: AsyncPipeline) -> None:
+    async def test_method_handle_webhook(self, async_client: AsyncPipelineLabs) -> None:
         billing = await async_client.billing.handle_webhook(
             body={},
         )
@@ -372,7 +372,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_handle_webhook(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_handle_webhook(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.billing.with_raw_response.handle_webhook(
             body={},
         )
@@ -384,7 +384,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_handle_webhook(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_handle_webhook(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.billing.with_streaming_response.handle_webhook(
             body={},
         ) as response:
@@ -398,13 +398,13 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_list_plans(self, async_client: AsyncPipeline) -> None:
+    async def test_method_list_plans(self, async_client: AsyncPipelineLabs) -> None:
         billing = await async_client.billing.list_plans()
         assert_matches_type(BillingListPlansResponse, billing, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_list_plans(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_list_plans(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.billing.with_raw_response.list_plans()
 
         assert response.is_closed is True
@@ -414,7 +414,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_list_plans(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_list_plans(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.billing.with_streaming_response.list_plans() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -426,7 +426,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_retrieve_subscription_status(self, async_client: AsyncPipeline) -> None:
+    async def test_method_retrieve_subscription_status(self, async_client: AsyncPipelineLabs) -> None:
         billing = await async_client.billing.retrieve_subscription_status(
             "user_id",
         )
@@ -434,7 +434,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_raw_response_retrieve_subscription_status(self, async_client: AsyncPipeline) -> None:
+    async def test_raw_response_retrieve_subscription_status(self, async_client: AsyncPipelineLabs) -> None:
         response = await async_client.billing.with_raw_response.retrieve_subscription_status(
             "user_id",
         )
@@ -446,7 +446,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_streaming_response_retrieve_subscription_status(self, async_client: AsyncPipeline) -> None:
+    async def test_streaming_response_retrieve_subscription_status(self, async_client: AsyncPipelineLabs) -> None:
         async with async_client.billing.with_streaming_response.retrieve_subscription_status(
             "user_id",
         ) as response:
@@ -460,7 +460,7 @@ class TestAsyncBilling:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_path_params_retrieve_subscription_status(self, async_client: AsyncPipeline) -> None:
+    async def test_path_params_retrieve_subscription_status(self, async_client: AsyncPipelineLabs) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `user_id` but received ''"):
             await async_client.billing.with_raw_response.retrieve_subscription_status(
                 "",
