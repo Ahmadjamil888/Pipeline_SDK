@@ -24,7 +24,7 @@ from ._compat import cached_property
 from ._models import SecurityOptions
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import PipelineError, APIStatusError
+from ._exceptions import APIStatusError, PipelineLabsError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -46,14 +46,14 @@ __all__ = [
     "Transport",
     "ProxiesTypes",
     "RequestOptions",
-    "Pipeline",
-    "AsyncPipeline",
+    "PipelineLabs",
+    "AsyncPipelineLabs",
     "Client",
     "AsyncClient",
 ]
 
 
-class Pipeline(SyncAPIClient):
+class PipelineLabs(SyncAPIClient):
     # client options
     api_key: str
 
@@ -80,20 +80,20 @@ class Pipeline(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous Pipeline client instance.
+        """Construct a new synchronous PipelineLabs client instance.
 
         This automatically infers the `api_key` argument from the `PIPELINE_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
             api_key = os.environ.get("PIPELINE_API_KEY")
         if api_key is None:
-            raise PipelineError(
+            raise PipelineLabsError(
                 "The api_key client option must be set either by passing api_key to the client or by setting the PIPELINE_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("PIPELINE_BASE_URL")
+            base_url = os.environ.get("PIPELINE_LABS_BASE_URL")
         if base_url is None:
             base_url = f"https://pipeline-ai-labs-by-ahmad.up.railway.app/api/v1"
 
@@ -151,12 +151,12 @@ class Pipeline(SyncAPIClient):
         return BillingResource(self)
 
     @cached_property
-    def with_raw_response(self) -> PipelineWithRawResponse:
-        return PipelineWithRawResponse(self)
+    def with_raw_response(self) -> PipelineLabsWithRawResponse:
+        return PipelineLabsWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> PipelineWithStreamedResponse:
-        return PipelineWithStreamedResponse(self)
+    def with_streaming_response(self) -> PipelineLabsWithStreamedResponse:
+        return PipelineLabsWithStreamedResponse(self)
 
     @property
     @override
@@ -268,7 +268,7 @@ class Pipeline(SyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class AsyncPipeline(AsyncAPIClient):
+class AsyncPipelineLabs(AsyncAPIClient):
     # client options
     api_key: str
 
@@ -295,20 +295,20 @@ class AsyncPipeline(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async AsyncPipeline client instance.
+        """Construct a new async AsyncPipelineLabs client instance.
 
         This automatically infers the `api_key` argument from the `PIPELINE_API_KEY` environment variable if it is not provided.
         """
         if api_key is None:
             api_key = os.environ.get("PIPELINE_API_KEY")
         if api_key is None:
-            raise PipelineError(
+            raise PipelineLabsError(
                 "The api_key client option must be set either by passing api_key to the client or by setting the PIPELINE_API_KEY environment variable"
             )
         self.api_key = api_key
 
         if base_url is None:
-            base_url = os.environ.get("PIPELINE_BASE_URL")
+            base_url = os.environ.get("PIPELINE_LABS_BASE_URL")
         if base_url is None:
             base_url = f"https://pipeline-ai-labs-by-ahmad.up.railway.app/api/v1"
 
@@ -366,12 +366,12 @@ class AsyncPipeline(AsyncAPIClient):
         return AsyncBillingResource(self)
 
     @cached_property
-    def with_raw_response(self) -> AsyncPipelineWithRawResponse:
-        return AsyncPipelineWithRawResponse(self)
+    def with_raw_response(self) -> AsyncPipelineLabsWithRawResponse:
+        return AsyncPipelineLabsWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncPipelineWithStreamedResponse:
-        return AsyncPipelineWithStreamedResponse(self)
+    def with_streaming_response(self) -> AsyncPipelineLabsWithStreamedResponse:
+        return AsyncPipelineLabsWithStreamedResponse(self)
 
     @property
     @override
@@ -483,10 +483,10 @@ class AsyncPipeline(AsyncAPIClient):
         return APIStatusError(err_msg, response=response, body=body)
 
 
-class PipelineWithRawResponse:
-    _client: Pipeline
+class PipelineLabsWithRawResponse:
+    _client: PipelineLabs
 
-    def __init__(self, client: Pipeline) -> None:
+    def __init__(self, client: PipelineLabs) -> None:
         self._client = client
 
     @cached_property
@@ -532,10 +532,10 @@ class PipelineWithRawResponse:
         return BillingResourceWithRawResponse(self._client.billing)
 
 
-class AsyncPipelineWithRawResponse:
-    _client: AsyncPipeline
+class AsyncPipelineLabsWithRawResponse:
+    _client: AsyncPipelineLabs
 
-    def __init__(self, client: AsyncPipeline) -> None:
+    def __init__(self, client: AsyncPipelineLabs) -> None:
         self._client = client
 
     @cached_property
@@ -581,10 +581,10 @@ class AsyncPipelineWithRawResponse:
         return AsyncBillingResourceWithRawResponse(self._client.billing)
 
 
-class PipelineWithStreamedResponse:
-    _client: Pipeline
+class PipelineLabsWithStreamedResponse:
+    _client: PipelineLabs
 
-    def __init__(self, client: Pipeline) -> None:
+    def __init__(self, client: PipelineLabs) -> None:
         self._client = client
 
     @cached_property
@@ -630,10 +630,10 @@ class PipelineWithStreamedResponse:
         return BillingResourceWithStreamingResponse(self._client.billing)
 
 
-class AsyncPipelineWithStreamedResponse:
-    _client: AsyncPipeline
+class AsyncPipelineLabsWithStreamedResponse:
+    _client: AsyncPipelineLabs
 
-    def __init__(self, client: AsyncPipeline) -> None:
+    def __init__(self, client: AsyncPipelineLabs) -> None:
         self._client = client
 
     @cached_property
@@ -679,6 +679,6 @@ class AsyncPipelineWithStreamedResponse:
         return AsyncBillingResourceWithStreamingResponse(self._client.billing)
 
 
-Client = Pipeline
+Client = PipelineLabs
 
-AsyncClient = AsyncPipeline
+AsyncClient = AsyncPipelineLabs
