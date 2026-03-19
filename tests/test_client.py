@@ -19,12 +19,12 @@ import pytest
 from respx import MockRouter
 from pydantic import ValidationError
 
-from pipeline import Pipeline, AsyncPipeline, APIResponseValidationError
-from pipeline._types import Omit
-from pipeline._utils import asyncify
-from pipeline._models import BaseModel, FinalRequestOptions
-from pipeline._exceptions import PipelineError, APIStatusError, APITimeoutError, APIResponseValidationError
-from pipeline._base_client import (
+from pipeline_labs import Pipeline, AsyncPipeline, APIResponseValidationError
+from pipeline_labs._types import Omit
+from pipeline_labs._utils import asyncify
+from pipeline_labs._models import BaseModel, FinalRequestOptions
+from pipeline_labs._exceptions import PipelineError, APIStatusError, APITimeoutError, APIResponseValidationError
+from pipeline_labs._base_client import (
     DEFAULT_TIMEOUT,
     HTTPX_DEFAULT_TIMEOUT,
     BaseClient,
@@ -286,10 +286,10 @@ class TestPipeline:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "pipeline/_legacy_response.py",
-                        "pipeline/_response.py",
+                        "pipeline_labs/_legacy_response.py",
+                        "pipeline_labs/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "pipeline/_compat.py",
+                        "pipeline_labs/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -848,7 +848,7 @@ class TestPipeline:
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: Pipeline) -> None:
         respx_mock.post("/webhooks/github").mock(side_effect=httpx.TimeoutException("Test timeout error"))
@@ -858,7 +858,7 @@ class TestPipeline:
 
         assert _get_open_connections(client) == 0
 
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: Pipeline) -> None:
         respx_mock.post("/webhooks/github").mock(return_value=httpx.Response(500))
@@ -868,7 +868,7 @@ class TestPipeline:
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     def test_retries_taken(
@@ -899,7 +899,7 @@ class TestPipeline:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_omit_retry_count_header(
         self, client: Pipeline, failures_before_success: int, respx_mock: MockRouter
@@ -922,7 +922,7 @@ class TestPipeline:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_overwrite_retry_count_header(
         self, client: Pipeline, failures_before_success: int, respx_mock: MockRouter
@@ -1175,10 +1175,10 @@ class TestAsyncPipeline:
                         # to_raw_response_wrapper leaks through the @functools.wraps() decorator.
                         #
                         # removing the decorator fixes the leak for reasons we don't understand.
-                        "pipeline/_legacy_response.py",
-                        "pipeline/_response.py",
+                        "pipeline_labs/_legacy_response.py",
+                        "pipeline_labs/_response.py",
                         # pydantic.BaseModel.model_dump || pydantic.BaseModel.dict leak memory for some reason.
-                        "pipeline/_compat.py",
+                        "pipeline_labs/_compat.py",
                         # Standard library leaks we don't care about.
                         "/logging/__init__.py",
                     ]
@@ -1754,7 +1754,7 @@ class TestAsyncPipeline:
         calculated = async_client._calculate_retry_timeout(remaining_retries, options, headers)
         assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(
         self, respx_mock: MockRouter, async_client: AsyncPipeline
@@ -1766,7 +1766,7 @@ class TestAsyncPipeline:
 
         assert _get_open_connections(async_client) == 0
 
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(
         self, respx_mock: MockRouter, async_client: AsyncPipeline
@@ -1778,7 +1778,7 @@ class TestAsyncPipeline:
         assert _get_open_connections(async_client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.parametrize("failure_mode", ["status", "exception"])
     async def test_retries_taken(
@@ -1809,7 +1809,7 @@ class TestAsyncPipeline:
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_omit_retry_count_header(
         self, async_client: AsyncPipeline, failures_before_success: int, respx_mock: MockRouter
@@ -1834,7 +1834,7 @@ class TestAsyncPipeline:
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
-    @mock.patch("pipeline._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
+    @mock.patch("pipeline_labs._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_overwrite_retry_count_header(
         self, async_client: AsyncPipeline, failures_before_success: int, respx_mock: MockRouter
