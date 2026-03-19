@@ -7,9 +7,9 @@ from typing import Any, cast
 
 import pytest
 
-from pipeline import Pipeline, AsyncPipeline
 from tests.utils import assert_matches_type
-from pipeline.types import (
+from pipeline_labs import Pipeline, AsyncPipeline
+from pipeline_labs.types import (
     BillingListPlansResponse,
     BillingHandleWebhookResponse,
     BillingCancelSubscriptionResponse,

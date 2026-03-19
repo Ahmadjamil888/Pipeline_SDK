@@ -2,7 +2,7 @@ import operator
 from typing import Any
 from typing_extensions import override
 
-from pipeline._utils import LazyProxy
+from pipeline_labs._utils import LazyProxy
 
 
 class RecursiveLazyProxy(LazyProxy[Any]):
