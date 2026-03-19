@@ -1,9 +1,9 @@
-# Pipeline Labs Python API library
+# Pipeline Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/pipeline_labs.svg?label=pypi%20(stable))](https://pypi.org/project/pipeline_labs/)
+[![PyPI version](https://img.shields.io/pypi/v/pipeline.svg?label=pypi%20(stable))](https://pypi.org/project/pipeline/)
 
-The Pipeline Labs Python library provides convenient access to the Pipeline Labs REST API from any Python 3.9+
+The Pipeline Python library provides convenient access to the Pipeline REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
@@ -11,14 +11,17 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The REST API documentation can be found on [pipeline.stldocs.app](https://pipeline.stldocs.app). The full API of this library can be found in [api.md](api.md).
+The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
 ```sh
-# install from PyPI
-pip install pipeline_labs
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/pipeline-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install pipeline`
 
 ## Usage
 
@@ -26,9 +29,9 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from pipeline_labs import PipelineLabs
+from pipeline import Pipeline
 
-client = PipelineLabs(
+client = Pipeline(
     api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -43,14 +46,14 @@ so that your API Key is not stored in source control.
 
 ## Async usage
 
-Simply import `AsyncPipelineLabs` instead of `PipelineLabs` and use `await` with each API call:
+Simply import `AsyncPipeline` instead of `Pipeline` and use `await` with each API call:
 
 ```python
 import os
 import asyncio
-from pipeline_labs import AsyncPipelineLabs
+from pipeline import AsyncPipeline
 
-client = AsyncPipelineLabs(
+client = AsyncPipeline(
     api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
 )
 
@@ -72,8 +75,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install pipeline_labs[aiohttp]
+# install from this staging repo
+pip install 'pipeline[aiohttp] @ git+ssh://git@github.com/stainless-sdks/pipeline-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -81,12 +84,12 @@ Then you can enable it by instantiating the client with `http_client=DefaultAioH
 ```python
 import os
 import asyncio
-from pipeline_labs import DefaultAioHttpClient
-from pipeline_labs import AsyncPipelineLabs
+from pipeline import DefaultAioHttpClient
+from pipeline import AsyncPipeline
 
 
 async def main() -> None:
-    async with AsyncPipelineLabs(
+    async with AsyncPipeline(
         api_key=os.environ.get("PIPELINE_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
@@ -111,9 +114,9 @@ Typed requests and responses provide autocomplete and documentation within your 
 Nested parameters are dictionaries, typed using `TypedDict`, for example:
 
 ```python
-from pipeline_labs import PipelineLabs
+from pipeline import Pipeline
 
-client = PipelineLabs()
+client = Pipeline()
 
 response = client.webhooks.handle_github(
     installation={},
@@ -123,27 +126,27 @@ print(response.installation)
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `pipeline_labs.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `pipeline.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `pipeline_labs.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `pipeline.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `pipeline_labs.APIError`.
+All errors inherit from `pipeline.APIError`.
 
 ```python
-import pipeline_labs
-from pipeline_labs import PipelineLabs
+import pipeline
+from pipeline import Pipeline
 
-client = PipelineLabs()
+client = Pipeline()
 
 try:
     client.webhooks.handle_github()
-except pipeline_labs.APIConnectionError as e:
+except pipeline.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except pipeline_labs.RateLimitError as e:
+except pipeline.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except pipeline_labs.APIStatusError as e:
+except pipeline.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -171,10 +174,10 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from pipeline_labs import PipelineLabs
+from pipeline import Pipeline
 
 # Configure the default for all requests:
-client = PipelineLabs(
+client = Pipeline(
     # default is 2
     max_retries=0,
 )
@@ -189,16 +192,16 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
-from pipeline_labs import PipelineLabs
+from pipeline import Pipeline
 
 # Configure the default for all requests:
-client = PipelineLabs(
+client = Pipeline(
     # 20 seconds (default is 1 minute)
     timeout=20.0,
 )
 
 # More granular control:
-client = PipelineLabs(
+client = Pipeline(
     timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
 )
 
@@ -216,10 +219,10 @@ Note that requests that time out are [retried twice by default](#retries).
 
 We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
 
-You can enable logging by setting the environment variable `PIPELINE_LABS_LOG` to `info`.
+You can enable logging by setting the environment variable `PIPELINE_LOG` to `info`.
 
 ```shell
-$ export PIPELINE_LABS_LOG=info
+$ export PIPELINE_LOG=info
 ```
 
 Or to `debug` for more verbose logging.
@@ -241,9 +244,9 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from pipeline_labs import PipelineLabs
+from pipeline import Pipeline
 
-client = PipelineLabs()
+client = Pipeline()
 response = client.webhooks.with_raw_response.handle_github()
 print(response.headers.get('X-My-Header'))
 
@@ -251,9 +254,9 @@ webhook = response.parse()  # get the object that `webhooks.handle_github()` wou
 print(webhook.message)
 ```
 
-These methods return an [`APIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline_labs/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/Ahmadjamil888/Pipeline_SDK/tree/main/src/pipeline_labs/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/pipeline-python/tree/main/src/pipeline/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -315,10 +318,10 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from pipeline_labs import PipelineLabs, DefaultHttpxClient
+from pipeline import Pipeline, DefaultHttpxClient
 
-client = PipelineLabs(
-    # Or use the `PIPELINE_LABS_BASE_URL` env var
+client = Pipeline(
+    # Or use the `PIPELINE_BASE_URL` env var
     base_url="http://my.test.server.example.com:8083",
     http_client=DefaultHttpxClient(
         proxy="http://my.test.proxy.example.com",
@@ -338,9 +341,9 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from pipeline_labs import PipelineLabs
+from pipeline import Pipeline
 
-with PipelineLabs() as client:
+with Pipeline() as client:
   # make requests here
   ...
 
@@ -357,7 +360,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/Ahmadjamil888/Pipeline_SDK/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/pipeline-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 
@@ -366,8 +369,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import pipeline_labs
-print(pipeline_labs.__version__)
+import pipeline
+print(pipeline.__version__)
 ```
 
 ## Requirements
