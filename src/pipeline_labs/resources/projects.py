@@ -50,10 +50,9 @@ class ProjectsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProjectRetrieveProgressResponse:
-        """Returns live progress steps from the AI deployment pipeline.
+        """Returns live progress steps from the AI pipeline.
 
-        Poll every 2
-        seconds.
+        Poll every 2 seconds.
 
         Args:
           extra_headers: Send extra headers
@@ -106,10 +105,9 @@ class AsyncProjectsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ProjectRetrieveProgressResponse:
-        """Returns live progress steps from the AI deployment pipeline.
+        """Returns live progress steps from the AI pipeline.
 
-        Poll every 2
-        seconds.
+        Poll every 2 seconds.
 
         Args:
           extra_headers: Send extra headers

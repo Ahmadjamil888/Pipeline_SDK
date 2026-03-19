@@ -7,10 +7,9 @@ from typing_extensions import Literal
 import httpx
 
 from ..types import (
-    billing_handle_webhook_params,
     billing_cancel_subscription_params,
-    billing_create_portal_session_params,
     billing_create_checkout_session_params,
+    billing_create_billing_portal_session_params,
 )
 from .._types import Body, Query, Headers, NotGiven, not_given
 from .._utils import maybe_transform, async_maybe_transform
@@ -24,11 +23,10 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.billing_list_plans_response import BillingListPlansResponse
-from ..types.billing_handle_webhook_response import BillingHandleWebhookResponse
 from ..types.billing_cancel_subscription_response import BillingCancelSubscriptionResponse
-from ..types.billing_create_portal_session_response import BillingCreatePortalSessionResponse
 from ..types.billing_create_checkout_session_response import BillingCreateCheckoutSessionResponse
 from ..types.billing_retrieve_subscription_status_response import BillingRetrieveSubscriptionStatusResponse
+from ..types.billing_create_billing_portal_session_response import BillingCreateBillingPortalSessionResponse
 
 __all__ = ["BillingResource", "AsyncBillingResource"]
 
@@ -87,6 +85,45 @@ class BillingResource(SyncAPIResource):
             cast_to=BillingCancelSubscriptionResponse,
         )
 
+    def create_billing_portal_session(
+        self,
+        *,
+        customer_id: str,
+        return_url: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> BillingCreateBillingPortalSessionResponse:
+        """
+        Create billing portal session
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/billing/portal-session",
+            body=maybe_transform(
+                {
+                    "customer_id": customer_id,
+                    "return_url": return_url,
+                },
+                billing_create_billing_portal_session_params.BillingCreateBillingPortalSessionParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=BillingCreateBillingPortalSessionResponse,
+        )
+
     def create_checkout_session(
         self,
         *,
@@ -128,77 +165,6 @@ class BillingResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=BillingCreateCheckoutSessionResponse,
-        )
-
-    def create_portal_session(
-        self,
-        *,
-        customer_id: str,
-        return_url: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BillingCreatePortalSessionResponse:
-        """
-        Create billing portal session
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._post(
-            "/billing/portal-session",
-            body=maybe_transform(
-                {
-                    "customer_id": customer_id,
-                    "return_url": return_url,
-                },
-                billing_create_portal_session_params.BillingCreatePortalSessionParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=BillingCreatePortalSessionResponse,
-        )
-
-    def handle_webhook(
-        self,
-        *,
-        body: object,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BillingHandleWebhookResponse:
-        """
-        Polar webhook handler
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._post(
-            "/billing/webhook",
-            body=maybe_transform(body, billing_handle_webhook_params.BillingHandleWebhookParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=BillingHandleWebhookResponse,
         )
 
     def list_plans(
@@ -308,6 +274,45 @@ class AsyncBillingResource(AsyncAPIResource):
             cast_to=BillingCancelSubscriptionResponse,
         )
 
+    async def create_billing_portal_session(
+        self,
+        *,
+        customer_id: str,
+        return_url: str,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> BillingCreateBillingPortalSessionResponse:
+        """
+        Create billing portal session
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/billing/portal-session",
+            body=await async_maybe_transform(
+                {
+                    "customer_id": customer_id,
+                    "return_url": return_url,
+                },
+                billing_create_billing_portal_session_params.BillingCreateBillingPortalSessionParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=BillingCreateBillingPortalSessionResponse,
+        )
+
     async def create_checkout_session(
         self,
         *,
@@ -349,77 +354,6 @@ class AsyncBillingResource(AsyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=BillingCreateCheckoutSessionResponse,
-        )
-
-    async def create_portal_session(
-        self,
-        *,
-        customer_id: str,
-        return_url: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BillingCreatePortalSessionResponse:
-        """
-        Create billing portal session
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._post(
-            "/billing/portal-session",
-            body=await async_maybe_transform(
-                {
-                    "customer_id": customer_id,
-                    "return_url": return_url,
-                },
-                billing_create_portal_session_params.BillingCreatePortalSessionParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=BillingCreatePortalSessionResponse,
-        )
-
-    async def handle_webhook(
-        self,
-        *,
-        body: object,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BillingHandleWebhookResponse:
-        """
-        Polar webhook handler
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._post(
-            "/billing/webhook",
-            body=await async_maybe_transform(body, billing_handle_webhook_params.BillingHandleWebhookParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=BillingHandleWebhookResponse,
         )
 
     async def list_plans(
@@ -482,14 +416,11 @@ class BillingResourceWithRawResponse:
         self.cancel_subscription = to_raw_response_wrapper(
             billing.cancel_subscription,
         )
+        self.create_billing_portal_session = to_raw_response_wrapper(
+            billing.create_billing_portal_session,
+        )
         self.create_checkout_session = to_raw_response_wrapper(
             billing.create_checkout_session,
-        )
-        self.create_portal_session = to_raw_response_wrapper(
-            billing.create_portal_session,
-        )
-        self.handle_webhook = to_raw_response_wrapper(
-            billing.handle_webhook,
         )
         self.list_plans = to_raw_response_wrapper(
             billing.list_plans,
@@ -506,14 +437,11 @@ class AsyncBillingResourceWithRawResponse:
         self.cancel_subscription = async_to_raw_response_wrapper(
             billing.cancel_subscription,
         )
+        self.create_billing_portal_session = async_to_raw_response_wrapper(
+            billing.create_billing_portal_session,
+        )
         self.create_checkout_session = async_to_raw_response_wrapper(
             billing.create_checkout_session,
-        )
-        self.create_portal_session = async_to_raw_response_wrapper(
-            billing.create_portal_session,
-        )
-        self.handle_webhook = async_to_raw_response_wrapper(
-            billing.handle_webhook,
         )
         self.list_plans = async_to_raw_response_wrapper(
             billing.list_plans,
@@ -530,14 +458,11 @@ class BillingResourceWithStreamingResponse:
         self.cancel_subscription = to_streamed_response_wrapper(
             billing.cancel_subscription,
         )
+        self.create_billing_portal_session = to_streamed_response_wrapper(
+            billing.create_billing_portal_session,
+        )
         self.create_checkout_session = to_streamed_response_wrapper(
             billing.create_checkout_session,
-        )
-        self.create_portal_session = to_streamed_response_wrapper(
-            billing.create_portal_session,
-        )
-        self.handle_webhook = to_streamed_response_wrapper(
-            billing.handle_webhook,
         )
         self.list_plans = to_streamed_response_wrapper(
             billing.list_plans,
@@ -554,14 +479,11 @@ class AsyncBillingResourceWithStreamingResponse:
         self.cancel_subscription = async_to_streamed_response_wrapper(
             billing.cancel_subscription,
         )
+        self.create_billing_portal_session = async_to_streamed_response_wrapper(
+            billing.create_billing_portal_session,
+        )
         self.create_checkout_session = async_to_streamed_response_wrapper(
             billing.create_checkout_session,
-        )
-        self.create_portal_session = async_to_streamed_response_wrapper(
-            billing.create_portal_session,
-        )
-        self.handle_webhook = async_to_streamed_response_wrapper(
-            billing.handle_webhook,
         )
         self.list_plans = async_to_streamed_response_wrapper(
             billing.list_plans,

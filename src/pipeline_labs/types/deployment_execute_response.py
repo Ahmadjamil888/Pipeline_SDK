@@ -4,10 +4,10 @@ from typing import Optional
 
 from .._models import BaseModel
 
-__all__ = ["DeploymentExecution"]
+__all__ = ["DeploymentExecuteResponse"]
 
 
-class DeploymentExecution(BaseModel):
+class DeploymentExecuteResponse(BaseModel):
     deployment_id: str
 
     message: str

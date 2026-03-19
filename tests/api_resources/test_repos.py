@@ -9,7 +9,7 @@ import pytest
 
 from tests.utils import assert_matches_type
 from pipeline_labs import Pipeline, AsyncPipeline
-from pipeline_labs.types import RepoConnection, RepoAnalyzeResponse
+from pipeline_labs.types import RepoConnection
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -56,48 +56,6 @@ class TestRepos:
     def test_path_params_retrieve(self, client: Pipeline) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
             client.repos.with_raw_response.retrieve(
-                "",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_analyze(self, client: Pipeline) -> None:
-        repo = client.repos.analyze(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_analyze(self, client: Pipeline) -> None:
-        response = client.repos.with_raw_response.analyze(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        repo = response.parse()
-        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_analyze(self, client: Pipeline) -> None:
-        with client.repos.with_streaming_response.analyze(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            repo = response.parse()
-            assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_analyze(self, client: Pipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
-            client.repos.with_raw_response.analyze(
                 "",
             )
 
@@ -194,48 +152,6 @@ class TestAsyncRepos:
     async def test_path_params_retrieve(self, async_client: AsyncPipeline) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
             await async_client.repos.with_raw_response.retrieve(
-                "",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_analyze(self, async_client: AsyncPipeline) -> None:
-        repo = await async_client.repos.analyze(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_analyze(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.repos.with_raw_response.analyze(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        repo = await response.parse()
-        assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_analyze(self, async_client: AsyncPipeline) -> None:
-        async with async_client.repos.with_streaming_response.analyze(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            repo = await response.parse()
-            assert_matches_type(RepoAnalyzeResponse, repo, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_analyze(self, async_client: AsyncPipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `repo_id` but received ''"):
-            await async_client.repos.with_raw_response.analyze(
                 "",
             )
 

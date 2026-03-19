@@ -40,14 +40,6 @@ from .projects import (
     ProjectsResourceWithStreamingResponse,
     AsyncProjectsResourceWithStreamingResponse,
 )
-from .webhooks import (
-    WebhooksResource,
-    AsyncWebhooksResource,
-    WebhooksResourceWithRawResponse,
-    AsyncWebhooksResourceWithRawResponse,
-    WebhooksResourceWithStreamingResponse,
-    AsyncWebhooksResourceWithStreamingResponse,
-)
 from .sandboxes import (
     SandboxesResource,
     AsyncSandboxesResource,
@@ -66,12 +58,6 @@ from .deployments import (
 )
 
 __all__ = [
-    "WebhooksResource",
-    "AsyncWebhooksResource",
-    "WebhooksResourceWithRawResponse",
-    "AsyncWebhooksResourceWithRawResponse",
-    "WebhooksResourceWithStreamingResponse",
-    "AsyncWebhooksResourceWithStreamingResponse",
     "GitHubResource",
     "AsyncGitHubResource",
     "GitHubResourceWithRawResponse",

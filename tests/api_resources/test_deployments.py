@@ -11,10 +11,9 @@ from tests.utils import assert_matches_type
 from pipeline_labs import Pipeline, AsyncPipeline
 from pipeline_labs.types import (
     DeploymentStatus,
-    DeploymentExecution,
     DeploymentListResponse,
-    DeploymentCancelResponse,
     DeploymentCreateResponse,
+    DeploymentExecuteResponse,
     DeploymentGetLogsResponse,
 )
 from pipeline_labs._utils import parse_datetime
@@ -159,53 +158,11 @@ class TestDeployments:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    def test_method_cancel(self, client: Pipeline) -> None:
-        deployment = client.deployments.cancel(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(DeploymentCancelResponse, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_cancel(self, client: Pipeline) -> None:
-        response = client.deployments.with_raw_response.cancel(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        deployment = response.parse()
-        assert_matches_type(DeploymentCancelResponse, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_cancel(self, client: Pipeline) -> None:
-        with client.deployments.with_streaming_response.cancel(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            deployment = response.parse()
-            assert_matches_type(DeploymentCancelResponse, deployment, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_cancel(self, client: Pipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `deployment_id` but received ''"):
-            client.deployments.with_raw_response.cancel(
-                "",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     def test_method_execute(self, client: Pipeline) -> None:
         deployment = client.deployments.execute(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
+        assert_matches_type(DeploymentExecuteResponse, deployment, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -217,7 +174,7 @@ class TestDeployments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         deployment = response.parse()
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
+        assert_matches_type(DeploymentExecuteResponse, deployment, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -229,7 +186,7 @@ class TestDeployments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             deployment = response.parse()
-            assert_matches_type(DeploymentExecution, deployment, path=["response"])
+            assert_matches_type(DeploymentExecuteResponse, deployment, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -291,48 +248,6 @@ class TestDeployments:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `deployment_id` but received ''"):
             client.deployments.with_raw_response.get_logs(
                 deployment_id="",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_method_retry(self, client: Pipeline) -> None:
-        deployment = client.deployments.retry(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_raw_response_retry(self, client: Pipeline) -> None:
-        response = client.deployments.with_raw_response.retry(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        deployment = response.parse()
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_streaming_response_retry(self, client: Pipeline) -> None:
-        with client.deployments.with_streaming_response.retry(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            deployment = response.parse()
-            assert_matches_type(DeploymentExecution, deployment, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    def test_path_params_retry(self, client: Pipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `deployment_id` but received ''"):
-            client.deployments.with_raw_response.retry(
-                "",
             )
 
 
@@ -475,53 +390,11 @@ class TestAsyncDeployments:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
-    async def test_method_cancel(self, async_client: AsyncPipeline) -> None:
-        deployment = await async_client.deployments.cancel(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(DeploymentCancelResponse, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_cancel(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.deployments.with_raw_response.cancel(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        deployment = await response.parse()
-        assert_matches_type(DeploymentCancelResponse, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_cancel(self, async_client: AsyncPipeline) -> None:
-        async with async_client.deployments.with_streaming_response.cancel(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            deployment = await response.parse()
-            assert_matches_type(DeploymentCancelResponse, deployment, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_cancel(self, async_client: AsyncPipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `deployment_id` but received ''"):
-            await async_client.deployments.with_raw_response.cancel(
-                "",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
     async def test_method_execute(self, async_client: AsyncPipeline) -> None:
         deployment = await async_client.deployments.execute(
             "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
         )
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
+        assert_matches_type(DeploymentExecuteResponse, deployment, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -533,7 +406,7 @@ class TestAsyncDeployments:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         deployment = await response.parse()
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
+        assert_matches_type(DeploymentExecuteResponse, deployment, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -545,7 +418,7 @@ class TestAsyncDeployments:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             deployment = await response.parse()
-            assert_matches_type(DeploymentExecution, deployment, path=["response"])
+            assert_matches_type(DeploymentExecuteResponse, deployment, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -607,46 +480,4 @@ class TestAsyncDeployments:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `deployment_id` but received ''"):
             await async_client.deployments.with_raw_response.get_logs(
                 deployment_id="",
-            )
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_method_retry(self, async_client: AsyncPipeline) -> None:
-        deployment = await async_client.deployments.retry(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_raw_response_retry(self, async_client: AsyncPipeline) -> None:
-        response = await async_client.deployments.with_raw_response.retry(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        deployment = await response.parse()
-        assert_matches_type(DeploymentExecution, deployment, path=["response"])
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_streaming_response_retry(self, async_client: AsyncPipeline) -> None:
-        async with async_client.deployments.with_streaming_response.retry(
-            "182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            deployment = await response.parse()
-            assert_matches_type(DeploymentExecution, deployment, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @pytest.mark.skip(reason="Mock server tests are disabled")
-    @parametrize
-    async def test_path_params_retry(self, async_client: AsyncPipeline) -> None:
-        with pytest.raises(ValueError, match=r"Expected a non-empty value for `deployment_id` but received ''"):
-            await async_client.deployments.with_raw_response.retry(
-                "",
             )

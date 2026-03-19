@@ -12,9 +12,8 @@ from ..types import (
     sandbox_create_params,
     sandbox_execute_params,
     sandbox_get_logs_params,
-    sandbox_open_terminal_params,
 )
-from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -32,7 +31,6 @@ from ..types.sandbox_start_response import SandboxStartResponse
 from ..types.sandbox_resources_param import SandboxResourcesParam
 from ..types.sandbox_execute_response import SandboxExecuteResponse
 from ..types.sandbox_get_logs_response import SandboxGetLogsResponse
-from ..types.sandbox_open_terminal_response import SandboxOpenTerminalResponse
 
 __all__ = ["SandboxesResource", "AsyncSandboxesResource"]
 
@@ -177,40 +175,6 @@ class SandboxesResource(SyncAPIResource):
             cast_to=SandboxListResponse,
         )
 
-    def delete(
-        self,
-        sandbox_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """
-        Destroy sandbox
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not sandbox_id:
-            raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return self._delete(
-            f"/sandboxes/{sandbox_id}",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
-        )
-
     def execute(
         self,
         sandbox_id: str,
@@ -293,50 +257,6 @@ class SandboxesResource(SyncAPIResource):
                 query=maybe_transform({"tail": tail}, sandbox_get_logs_params.SandboxGetLogsParams),
             ),
             cast_to=SandboxGetLogsResponse,
-        )
-
-    def open_terminal(
-        self,
-        sandbox_id: str,
-        *,
-        environment_variables: Dict[str, str] | Omit = omit,
-        shell: str | Omit = omit,
-        working_directory: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SandboxOpenTerminalResponse:
-        """
-        Open terminal session
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not sandbox_id:
-            raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
-        return self._post(
-            f"/sandboxes/{sandbox_id}/terminal",
-            body=maybe_transform(
-                {
-                    "environment_variables": environment_variables,
-                    "shell": shell,
-                    "working_directory": working_directory,
-                },
-                sandbox_open_terminal_params.SandboxOpenTerminalParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=SandboxOpenTerminalResponse,
         )
 
     def start(
@@ -546,40 +466,6 @@ class AsyncSandboxesResource(AsyncAPIResource):
             cast_to=SandboxListResponse,
         )
 
-    async def delete(
-        self,
-        sandbox_id: str,
-        *,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
-        """
-        Destroy sandbox
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not sandbox_id:
-            raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
-        return await self._delete(
-            f"/sandboxes/{sandbox_id}",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=NoneType,
-        )
-
     async def execute(
         self,
         sandbox_id: str,
@@ -664,50 +550,6 @@ class AsyncSandboxesResource(AsyncAPIResource):
             cast_to=SandboxGetLogsResponse,
         )
 
-    async def open_terminal(
-        self,
-        sandbox_id: str,
-        *,
-        environment_variables: Dict[str, str] | Omit = omit,
-        shell: str | Omit = omit,
-        working_directory: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SandboxOpenTerminalResponse:
-        """
-        Open terminal session
-
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not sandbox_id:
-            raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
-        return await self._post(
-            f"/sandboxes/{sandbox_id}/terminal",
-            body=await async_maybe_transform(
-                {
-                    "environment_variables": environment_variables,
-                    "shell": shell,
-                    "working_directory": working_directory,
-                },
-                sandbox_open_terminal_params.SandboxOpenTerminalParams,
-            ),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=SandboxOpenTerminalResponse,
-        )
-
     async def start(
         self,
         sandbox_id: str,
@@ -788,17 +630,11 @@ class SandboxesResourceWithRawResponse:
         self.list = to_raw_response_wrapper(
             sandboxes.list,
         )
-        self.delete = to_raw_response_wrapper(
-            sandboxes.delete,
-        )
         self.execute = to_raw_response_wrapper(
             sandboxes.execute,
         )
         self.get_logs = to_raw_response_wrapper(
             sandboxes.get_logs,
-        )
-        self.open_terminal = to_raw_response_wrapper(
-            sandboxes.open_terminal,
         )
         self.start = to_raw_response_wrapper(
             sandboxes.start,
@@ -821,17 +657,11 @@ class AsyncSandboxesResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             sandboxes.list,
         )
-        self.delete = async_to_raw_response_wrapper(
-            sandboxes.delete,
-        )
         self.execute = async_to_raw_response_wrapper(
             sandboxes.execute,
         )
         self.get_logs = async_to_raw_response_wrapper(
             sandboxes.get_logs,
-        )
-        self.open_terminal = async_to_raw_response_wrapper(
-            sandboxes.open_terminal,
         )
         self.start = async_to_raw_response_wrapper(
             sandboxes.start,
@@ -854,17 +684,11 @@ class SandboxesResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             sandboxes.list,
         )
-        self.delete = to_streamed_response_wrapper(
-            sandboxes.delete,
-        )
         self.execute = to_streamed_response_wrapper(
             sandboxes.execute,
         )
         self.get_logs = to_streamed_response_wrapper(
             sandboxes.get_logs,
-        )
-        self.open_terminal = to_streamed_response_wrapper(
-            sandboxes.open_terminal,
         )
         self.start = to_streamed_response_wrapper(
             sandboxes.start,
@@ -887,17 +711,11 @@ class AsyncSandboxesResourceWithStreamingResponse:
         self.list = async_to_streamed_response_wrapper(
             sandboxes.list,
         )
-        self.delete = async_to_streamed_response_wrapper(
-            sandboxes.delete,
-        )
         self.execute = async_to_streamed_response_wrapper(
             sandboxes.execute,
         )
         self.get_logs = async_to_streamed_response_wrapper(
             sandboxes.get_logs,
-        )
-        self.open_terminal = async_to_streamed_response_wrapper(
-            sandboxes.open_terminal,
         )
         self.start = async_to_streamed_response_wrapper(
             sandboxes.start,
