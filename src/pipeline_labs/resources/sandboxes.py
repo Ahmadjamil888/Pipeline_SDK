@@ -14,7 +14,7 @@ from ..types import (
     sandbox_get_logs_params,
 )
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -126,7 +126,7 @@ class SandboxesResource(SyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return self._get(
-            f"/sandboxes/{sandbox_id}",
+            path_template("/sandboxes/{sandbox_id}", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -205,7 +205,7 @@ class SandboxesResource(SyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return self._post(
-            f"/sandboxes/{sandbox_id}/execute",
+            path_template("/sandboxes/{sandbox_id}/execute", sandbox_id=sandbox_id),
             body=maybe_transform(
                 {
                     "command": command,
@@ -248,7 +248,7 @@ class SandboxesResource(SyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return self._get(
-            f"/sandboxes/{sandbox_id}/logs",
+            path_template("/sandboxes/{sandbox_id}/logs", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -285,7 +285,7 @@ class SandboxesResource(SyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return self._post(
-            f"/sandboxes/{sandbox_id}/start",
+            path_template("/sandboxes/{sandbox_id}/start", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -318,7 +318,7 @@ class SandboxesResource(SyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return self._post(
-            f"/sandboxes/{sandbox_id}/stop",
+            path_template("/sandboxes/{sandbox_id}/stop", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -417,7 +417,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return await self._get(
-            f"/sandboxes/{sandbox_id}",
+            path_template("/sandboxes/{sandbox_id}", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -496,7 +496,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return await self._post(
-            f"/sandboxes/{sandbox_id}/execute",
+            path_template("/sandboxes/{sandbox_id}/execute", sandbox_id=sandbox_id),
             body=await async_maybe_transform(
                 {
                     "command": command,
@@ -539,7 +539,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return await self._get(
-            f"/sandboxes/{sandbox_id}/logs",
+            path_template("/sandboxes/{sandbox_id}/logs", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -576,7 +576,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return await self._post(
-            f"/sandboxes/{sandbox_id}/start",
+            path_template("/sandboxes/{sandbox_id}/start", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -609,7 +609,7 @@ class AsyncSandboxesResource(AsyncAPIResource):
         if not sandbox_id:
             raise ValueError(f"Expected a non-empty value for `sandbox_id` but received {sandbox_id!r}")
         return await self._post(
-            f"/sandboxes/{sandbox_id}/stop",
+            path_template("/sandboxes/{sandbox_id}/stop", sandbox_id=sandbox_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
