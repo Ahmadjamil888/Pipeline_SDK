@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 (2026-03-27)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* **internal:** implement indices array format for query and form serialization ([2aa6854](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/2aa68541153982001654f3081e433b0ab67d3d66))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([f904fd6](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/f904fd658c42a482221c1ded1142cc195e585bf5))
+* **internal:** update gitignore ([69b4e53](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/69b4e53d9180363d0f7bad50a61582f7c7cd9b2d))
+
 ## 0.2.1 (2026-03-20)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.2.0...v0.2.1)
