@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 (2026-04-08)
+
+Full Changelog: [v0.3.0...v0.3.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.3.0...v0.3.1)
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([944ac0d](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/944ac0d2f01f13deb50fa5d8af24bf85fcab607d))
+
 ## 0.3.0 (2026-03-27)
 
 Full Changelog: [v0.2.1...v0.3.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.2.1...v0.3.0)
