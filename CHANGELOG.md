@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.2 (2026-04-11)
+
+Full Changelog: [v0.3.1...v0.3.2](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.3.1...v0.3.2)
+
+### Bug Fixes
+
+* ensure file data are only sent as 1 parameter ([2c2aef0](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/2c2aef087db2395c89e76cb4f2c30100ac90542b))
+
 ## 0.3.1 (2026-04-08)
 
 Full Changelog: [v0.3.0...v0.3.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.3.0...v0.3.1)
