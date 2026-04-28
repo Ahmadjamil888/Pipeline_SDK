@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.4.0 (2026-04-28)
+
+Full Changelog: [v0.3.2...v0.4.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.3.2...v0.4.0)
+
+### Features
+
+* support setting headers via env ([d328887](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/d3288875fb2a8da3990e8dbded8e771351c5633e))
+
+
+### Bug Fixes
+
+* use correct field name format for multipart file arrays ([025a386](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/025a386ee35d8bb214e4702c29359924fd028953))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([1669f05](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/1669f05aff22d665a05609c31471fd089f7e14db))
+
+
+### Chores
+
+* **internal:** more robust bootstrap script ([e7ee581](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/e7ee581174557977cb1dbb2a09b89a2ffc8e4ed3))
+
 ## 0.3.2 (2026-04-11)
 
 Full Changelog: [v0.3.1...v0.3.2](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.3.1...v0.3.2)
