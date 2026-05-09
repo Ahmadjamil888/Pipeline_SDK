@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.1 (2026-05-09)
+
+Full Changelog: [v0.4.0...v0.4.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.4.0...v0.4.1)
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([b73400f](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/b73400f2f299cc37b5955f546c0e0760fad0139b))
+
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([d71796f](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/d71796fdb91c77ec961ed03258b836bbbedb84bf))
+
 ## 0.4.0 (2026-04-28)
 
 Full Changelog: [v0.3.2...v0.4.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.3.2...v0.4.0)
