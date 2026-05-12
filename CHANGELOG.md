@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-05-12)
+
+Full Changelog: [v0.4.1...v0.5.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.4.1...v0.5.0)
+
+### Features
+
+* **internal/types:** support eagerly validating pydantic iterators ([3806b83](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/3806b839330580962765f1292e0fa297e66695b8))
+
 ## 0.4.1 (2026-05-09)
 
 Full Changelog: [v0.4.0...v0.4.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.4.0...v0.4.1)
