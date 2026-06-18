@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1 (2026-06-18)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.5.0...v0.5.1)
+
+### Bug Fixes
+
+* **auth:** prioritize first auth header ([e63667f](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/e63667f3b307664798139d2e58ccddda5815f37b))
+
 ## 0.5.0 (2026-05-12)
 
 Full Changelog: [v0.4.1...v0.5.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.4.1...v0.5.0)
