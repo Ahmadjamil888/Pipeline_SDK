@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2 (2026-07-14)
+
+Full Changelog: [v0.5.1...v0.5.2](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.5.1...v0.5.2)
+
+### Bug Fixes
+
+* **internal:** resolve build failures ([ae92ecf](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/ae92ecf97c6af7793ade72afe4dfe43922b589da))
+
 ## 0.5.1 (2026-06-18)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.5.0...v0.5.1)
