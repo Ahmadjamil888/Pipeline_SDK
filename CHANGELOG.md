@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 (2026-07-18)
+
+Full Changelog: [v0.5.2...v0.6.0](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.5.2...v0.6.0)
+
+### Features
+
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([f68d24c](https://github.com/Ahmadjamil888/Pipeline_SDK/commit/f68d24cd25e13bef92a7a1b8c35d71c7a917df0e))
+
 ## 0.5.2 (2026-07-14)
 
 Full Changelog: [v0.5.1...v0.5.2](https://github.com/Ahmadjamil888/Pipeline_SDK/compare/v0.5.1...v0.5.2)
